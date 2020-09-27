@@ -6,18 +6,18 @@ const PIN_TEMPLATE = document.querySelector(`#pin`)
   .content
   .querySelector(`.map__pin`);
 const PINS_QUANTITY = 8;
-const PRICES = [500, 1500, 1300, 650, 950, 2500, 3000, 1850];
+const MAX_PRICE = 1000000;
 const TYPES = [`palace`, `flat`, `house`, `bungalow`];
 const ROOM_QUANTITY = 5;
 const GUEST_QUANTITY = 3;
 const TIMES = [`12:00`, `13:00`, `14:00`];
 const FEATURES = [`wifi`, `dishwasher`, `parking`, `washer`, `elevator`, `conditioner`];
 const PHOTOS = [`http://o0.github.io/assets/images/tokyo/hotel1.jpg`, `http://o0.github.io/assets/images/tokyo/hotel2.jpg`, `http://o0.github.io/assets/images/tokyo/hotel3.jpg`];
-const MIN_X_POSITION = 0;
+const MIN_X_POSITION = 25;
 const MAX_X_POSITION = MAP_PINS.clientWidth;
-const MIN_Y_POSITION = 130;
-const MAX_Y_POSITION = 630;
-const OFFSET_X = 50 / 2;
+const MIN_Y_POSITION = 200;
+const MAX_Y_POSITION = 700;
+const OFFSET_X = 25;
 const OFFSET_Y = 70;
 
 const getRandomNumber = function (min, max) {
@@ -38,45 +38,34 @@ const getRandomArray = function (array, quantity) {
   return newArray;
 };
 
-const shuffleArray = function (array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    let j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-};
-
 const getPins = function () {
   const array = [];
-  let imageNumbers = [];
 
   for (let i = 0; i < PINS_QUANTITY; i++) {
-    imageNumbers[i] = i + 1;
-  }
+    const xLocation = getRandomNumber(MIN_X_POSITION, MAX_X_POSITION);
+    const yLocation = getRandomNumber(MIN_Y_POSITION, MAX_Y_POSITION);
+    const photosNumber = getRandomNumber(1, PHOTOS.length);
 
-  imageNumbers = shuffleArray(imageNumbers);
-
-  for (let i = 0; i < PINS_QUANTITY; i++) {
     array[i] = {
       author: {
-        avatar: `img/avatars/user0` + imageNumbers[i] + `.png`
+        avatar: `img/avatars/user0` + (i + 1) + `.png`
       },
       offer: {
-        title: ``,
-        address: ``,
-        price: PRICES[i],
+        title: `Заголовок объявления`,
+        address: xLocation + ` ` + yLocation,
+        price: getRandomNumber(0, MAX_PRICE),
         type: TYPES[getRandomNumber(0, TYPES.length - 1)],
         rooms: getRandomNumber(1, ROOM_QUANTITY),
         guests: getRandomNumber(1, GUEST_QUANTITY),
         checkin: TIMES[getRandomNumber(0, TIMES.length - 1)],
         checkout: TIMES[getRandomNumber(0, TIMES.length - 1)],
         features: getRandomArray(FEATURES, FEATURES.length),
-        description: ``,
-        photos: getRandomArray(PHOTOS, PHOTOS.length)
+        description: `Описание объявления`,
+        photos: PHOTOS.slice(0, photosNumber)
       },
       location: {
-        x: getRandomNumber(MIN_X_POSITION, MAX_X_POSITION),
-        y: getRandomNumber(MIN_Y_POSITION, MAX_Y_POSITION)
+        x: xLocation,
+        y: yLocation
       }
     };
   }
