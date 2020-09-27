@@ -7,15 +7,11 @@ const PIN_TEMPLATE = document.querySelector(`#pin`)
   .querySelector(`.map__pin`);
 const PINS_QUANTITY = 8;
 const PRICES = [500, 1500, 1300, 650, 950, 2500, 3000, 1850];
-const TYPE_QUANTITY = 4;
 const TYPES = [`palace`, `flat`, `house`, `bungalow`];
 const ROOM_QUANTITY = 5;
 const GUEST_QUANTITY = 3;
-const TIME_QUANTITY = 3;
 const TIMES = [`12:00`, `13:00`, `14:00`];
-const FEATURES_QUANTITY = 6;
 const FEATURES = [`wifi`, `dishwasher`, `parking`, `washer`, `elevator`, `conditioner`];
-const PHOTOS_QUANTITY = 3;
 const PHOTOS = [`http://o0.github.io/assets/images/tokyo/hotel1.jpg`, `http://o0.github.io/assets/images/tokyo/hotel2.jpg`, `http://o0.github.io/assets/images/tokyo/hotel3.jpg`];
 const MIN_X_POSITION = 0;
 const MAX_X_POSITION = MAP_PINS.clientWidth;
@@ -69,14 +65,14 @@ const getPins = function () {
         title: ``,
         address: ``,
         price: PRICES[i],
-        type: TYPES[getRandomNumber(0, TYPE_QUANTITY - 1)],
+        type: TYPES[getRandomNumber(0, TYPES.length - 1)],
         rooms: getRandomNumber(1, ROOM_QUANTITY),
         guests: getRandomNumber(1, GUEST_QUANTITY),
-        checkin: TIMES[getRandomNumber(0, TIME_QUANTITY - 1)],
-        checkout: TIMES[getRandomNumber(0, TIME_QUANTITY - 1)],
-        features: getRandomArray(FEATURES, FEATURES_QUANTITY),
+        checkin: TIMES[getRandomNumber(0, TIMES.length - 1)],
+        checkout: TIMES[getRandomNumber(0, TIMES.length - 1)],
+        features: getRandomArray(FEATURES, FEATURES.length),
         description: ``,
-        photos: getRandomArray(PHOTOS, PHOTOS_QUANTITY)
+        photos: getRandomArray(PHOTOS, PHOTOS.length)
       },
       location: {
         x: getRandomNumber(MIN_X_POSITION, MAX_X_POSITION),
