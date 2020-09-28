@@ -145,6 +145,9 @@ const addPhotos = function (target, element, source) {
 };
 
 const renderCard = function (pins) {
+  const FRAGMENT = document.createDocumentFragment();
+  const PARENT = document.querySelector(`.map`);
+  const ELEMENT_AFTER = document.querySelector(`.map__filters-container`);
   const CARD_ELEMENT = CARD_TEMPLATE.cloneNode(true);
   const FEATURES_LIST = CARD_ELEMENT.querySelector(`.popup__features`);
   const FEATURE_ITEMS = FEATURES_LIST.children;
@@ -229,6 +232,9 @@ const renderCard = function (pins) {
   } else {
     CARD_ELEMENT.querySelector(`.popup__photos`).style.display = `none`;
   }
+
+  FRAGMENT.appendChild(CARD_ELEMENT);
+  PARENT.insertBefore(FRAGMENT, ELEMENT_AFTER);
 };
 
 const PINS = getPins();
