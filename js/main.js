@@ -9,9 +9,10 @@ const CARD_TEMPLATE = document.querySelector(`#card`)
   .content
   .querySelector(`.map__card`);
 const PINS_QUANTITY = 8;
+const MIN_PRICE = 1000;
 const MAX_PRICE = 1000000;
 const TYPES = [`palace`, `flat`, `house`, `bungalow`];
-const ApartmentsType = {
+const apartmentsType = {
   palace: `Дворец`,
   flat: `Квартира`,
   house: `Дом`,
@@ -62,7 +63,7 @@ const getPins = function () {
       offer: {
         title: `Заголовок объявления`,
         address: xLocation + `, ` + yLocation,
-        price: getRandomNumber(0, MAX_PRICE),
+        price: getRandomNumber(MIN_PRICE, MAX_PRICE),
         type: TYPES[getRandomNumber(0, TYPES.length - 1)],
         rooms: getRandomNumber(1, ROOM_QUANTITY),
         guests: getRandomNumber(1, GUEST_QUANTITY),
@@ -182,7 +183,7 @@ const addPhotos = function (target, element, source) {
   }
 };
 
-const renderCard = function (pins) {
+const renderCard = function (pin) {
   const FRAGMENT = document.createDocumentFragment();
   const PARENT = document.querySelector(`.map`);
   const ELEMENT_AFTER = document.querySelector(`.map__filters-container`);
@@ -192,16 +193,16 @@ const renderCard = function (pins) {
   const PHOTOS_LIST = CARD_ELEMENT.querySelector(`.popup__photos`);
   const PHOTO_ITEM = CARD_ELEMENT.querySelector(`.popup__photo`);
 
-  fillSrcField(CARD_ELEMENT.querySelector(`.popup__avatar`), pins[0].author.avatar);
-  fillTextField(CARD_ELEMENT.querySelector(`.popup__title`), pins[0].offer.title);
-  fillTextField(CARD_ELEMENT.querySelector(`.popup__text--address`), pins[0].offer.address);
-  fillTextField(CARD_ELEMENT.querySelector(`.popup__text--price`), pins[0].offer.price);
-  fillTextField(CARD_ELEMENT.querySelector(`.popup__type`), ApartmentsType[pins[0].offer.type]);
-  fillTextCapacity(CARD_ELEMENT.querySelector(`.popup__text--capacity`), pins[0].offer.rooms, pins[0].offer.guests);
-  fillTextTime(CARD_ELEMENT.querySelector(`.popup__text--time`), pins[0].offer.checkin, pins[0].offer.checkout);
-  setFeatures(FEATURES_LIST, FEATURE_ITEMS, pins[0].offer.features);
-  fillTextField(CARD_ELEMENT.querySelector(`.popup__description`), pins[0].offer.description);
-  addPhotos(PHOTOS_LIST, PHOTO_ITEM, pins[0].offer.photos);
+  fillSrcField(CARD_ELEMENT.querySelector(`.popup__avatar`), pin.author.avatar);
+  fillTextField(CARD_ELEMENT.querySelector(`.popup__title`), pin.offer.title);
+  fillTextField(CARD_ELEMENT.querySelector(`.popup__text--address`), pin.offer.address);
+  fillTextField(CARD_ELEMENT.querySelector(`.popup__text--price`), pin.offer.price);
+  fillTextField(CARD_ELEMENT.querySelector(`.popup__type`), apartmentsType[pin.offer.type]);
+  fillTextCapacity(CARD_ELEMENT.querySelector(`.popup__text--capacity`), pin.offer.rooms, pin.offer.guests);
+  fillTextTime(CARD_ELEMENT.querySelector(`.popup__text--time`), pin.offer.checkin, pin.offer.checkout);
+  setFeatures(FEATURES_LIST, FEATURE_ITEMS, pin.offer.features);
+  fillTextField(CARD_ELEMENT.querySelector(`.popup__description`), pin.offer.description);
+  addPhotos(PHOTOS_LIST, PHOTO_ITEM, pin.offer.photos);
 
   FRAGMENT.appendChild(CARD_ELEMENT);
   PARENT.insertBefore(FRAGMENT, ELEMENT_AFTER);
@@ -212,4 +213,4 @@ const PINS = getPins();
 MAP.classList.remove(`map--faded`);
 
 renderPins(PINS);
-renderCard(PINS);
+renderCard(PINS[0]);
