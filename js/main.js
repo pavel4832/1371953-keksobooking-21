@@ -1,6 +1,11 @@
 'use strict';
 
 const MAP = document.querySelector(`.map`);
+const MAP_PIN_MAIN = MAP.querySelector(`.map__pin--main`);
+const PinsDimensions = {
+  WIDTH: 65,
+  HEIGHT: 87
+};
 const MAP_PINS = document.querySelector(`.map__pins`);
 const PIN_TEMPLATE = document.querySelector(`#pin`)
   .content
@@ -29,6 +34,13 @@ const MIN_Y_POSITION = 200;
 const MAX_Y_POSITION = 700;
 const OFFSET_X = 25;
 const OFFSET_Y = 70;
+const FILTERS_FORM = MAP.querySelector(`.map__filters`);
+const FILTERS_FIELDS = FILTERS_FORM.children;
+const NOTICE_FORM = document.querySelector(`.ad-form`);
+const NOTICE_FIELDS = NOTICE_FORM.querySelectorAll(`fieldset`);
+const ADDRESS_FIELD = NOTICE_FORM.querySelector(`#address`);
+const ROOM_FIELD = NOTICE_FORM.querySelector(`#room_number`);
+const GUEST_FIELD = NOTICE_FORM.querySelector(`#capacity`);
 
 const getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
@@ -94,6 +106,18 @@ const renderPins = function (pins) {
     FRAGMENT.appendChild(PIN_ELEMENT);
   }
   MAP_PINS.appendChild(FRAGMENT);
+};
+
+const disableFormFields = function (target) {
+  for (let i = 0; i < target.length; i++) {
+    target[i].setAttribute(`disabled`, `disabled`);
+  }
+};
+
+const enableFormFields = function (target) {
+  for (let i = 0; i < target.length; i++) {
+    target[i].removeAttribute(`disabled`);
+  }
 };
 
 const getRoomText = function (rooms) {
@@ -208,9 +232,49 @@ const renderCard = function (pin) {
   PARENT.insertBefore(FRAGMENT, ELEMENT_AFTER);
 };
 
-const PINS = getPins();
+const fillAddressField = function () {
+  let offsetX = Math.floor(PinsDimensions.WIDTH / 2);
+  let offsetY = PinsDimensions.HEIGHT;
+  let xLocation = parseInt(MAP_PIN_MAIN.style.left, 10) + offsetX;
+  let yLocation = parseInt(MAP_PIN_MAIN.style.top, 10) + offsetY;
+  ADDRESS_FIELD.value = `${xLocation}, ${yLocation}`;
+};
 
-MAP.classList.remove(`map--faded`);
+const getActivePage = function () {
+  const PINS = getPins();
 
-renderPins(PINS);
-renderCard(PINS[0]);
+  enableFormFields(FILTERS_FIELDS);
+  enableFormFields(NOTICE_FIELDS);
+  MAP.classList.remove(`map--faded`);
+  NOTICE_FORM.classList.remove(`ad-form--disabled`);
+  fillAddressField();
+  renderPins(PINS);
+  renderCard(PINS[0]);
+};
+
+disableFormFields(FILTERS_FIELDS);
+disableFormFields(NOTICE_FIELDS);
+
+MAP_PIN_MAIN.addEventListener(`mousedown`, function (evt) {
+  if (evt.button === 0) {
+    getActivePage();
+  }
+});
+
+MAP_PIN_MAIN.addEventListener(`keydown`, function (evt) {
+  if (evt.key === `Enter`) {
+    getActivePage();
+  }
+});
+
+GUEST_FIELD.addEventListener(`change`, function () {
+  let roomNumber = ROOM_FIELD.value;
+  let guestNumber = GUEST_FIELD.value;
+
+  if (roomNumber < guestNumber) {
+    GUEST_FIELD.setCustomValidity(`Количество гостей превышает количество комнат. Уменьшите количество гостей`);
+  } else {
+    GUEST_FIELD.setCustomValidity(``);
+  }
+  GUEST_FIELD.reportValidity();
+});
