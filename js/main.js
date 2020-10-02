@@ -231,8 +231,9 @@ const renderCard = function (pin) {
 };
 
 const fillAddressFieldNoActive = function () {
-  let xLocation = parseInt(MAP_PIN_MAIN.style.left, 10);
-  let yLocation = parseInt(MAP_PIN_MAIN.style.top, 10);
+  let offset = 100;
+  let xLocation = parseInt(MAP_PIN_MAIN.style.left, 10) + offset;
+  let yLocation = parseInt(MAP_PIN_MAIN.style.top, 10) + offset;
   ADDRESS_FIELD.value = `${xLocation}, ${yLocation}`;
 };
 
