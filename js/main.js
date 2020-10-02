@@ -1,6 +1,11 @@
 'use strict';
 
 const MAP = document.querySelector(`.map`);
+const MAP_PIN_MAIN = MAP.querySelector(`.map__pin--main`);
+const PinsDimensions = {
+  WIDTH: 62,
+  HEIGHT: 84
+};
 const MAP_PINS = document.querySelector(`.map__pins`);
 const PIN_TEMPLATE = document.querySelector(`#pin`)
   .content
@@ -29,6 +34,11 @@ const MIN_Y_POSITION = 200;
 const MAX_Y_POSITION = 700;
 const OFFSET_X = 25;
 const OFFSET_Y = 70;
+const NOTICE_FORM = document.querySelector(`.ad-form`);
+const FORM_FIELDS = document.querySelectorAll(`.map__filters select, .map__filters fieldset, .ad-form fieldset`);
+const ADDRESS_FIELD = NOTICE_FORM.querySelector(`#address`);
+const ROOM_FIELD = NOTICE_FORM.querySelector(`#room_number`);
+const GUEST_FIELD = NOTICE_FORM.querySelector(`#capacity`);
 
 const getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
@@ -94,6 +104,18 @@ const renderPins = function (pins) {
     FRAGMENT.appendChild(PIN_ELEMENT);
   }
   MAP_PINS.appendChild(FRAGMENT);
+};
+
+const disableFormFields = function (fields) {
+  for (let i = 0; i < fields.length; i++) {
+    fields[i].setAttribute(`disabled`, `disabled`);
+  }
+};
+
+const enableFormFields = function (fields) {
+  for (let i = 0; i < fields.length; i++) {
+    fields[i].removeAttribute(`disabled`);
+  }
 };
 
 const getRoomText = function (rooms) {
@@ -208,9 +230,68 @@ const renderCard = function (pin) {
   PARENT.insertBefore(FRAGMENT, ELEMENT_AFTER);
 };
 
-const PINS = getPins();
+const fillAddressFieldNoActive = function () {
+  const OFFSET = Math.floor(PinsDimensions.WIDTH / 2);
+  let xLocation = parseInt(MAP_PIN_MAIN.style.left, 10) + OFFSET;
+  let yLocation = parseInt(MAP_PIN_MAIN.style.top, 10) + OFFSET;
+  ADDRESS_FIELD.value = `${xLocation}, ${yLocation}`;
+};
 
-MAP.classList.remove(`map--faded`);
+const fillAddressField = function () {
+  let offsetX = Math.floor(PinsDimensions.WIDTH / 2);
+  let offsetY = PinsDimensions.HEIGHT;
+  let xLocation = parseInt(MAP_PIN_MAIN.style.left, 10) + offsetX;
+  let yLocation = parseInt(MAP_PIN_MAIN.style.top, 10) + offsetY;
+  ADDRESS_FIELD.value = `${xLocation}, ${yLocation}`;
+};
 
-renderPins(PINS);
-renderCard(PINS[0]);
+const checkValidGuest = function () {
+  let roomNumber = ROOM_FIELD.value;
+  let guestNumber = GUEST_FIELD.value;
+
+  if (roomNumber === `100` && guestNumber !== `0`) {
+    GUEST_FIELD.setCustomValidity(`Это жилье не для гостей. Измените выбор`);
+  } else if (guestNumber === `0` && roomNumber !== `100`) {
+    GUEST_FIELD.setCustomValidity(`Это жилье для размещения гостей. Измените выбор комнат`);
+  } else if (roomNumber < guestNumber) {
+    GUEST_FIELD.setCustomValidity(`Количество гостей превышает количество комнат. Уменьшите количество гостей`);
+  } else {
+    GUEST_FIELD.setCustomValidity(``);
+  }
+  GUEST_FIELD.reportValidity();
+};
+
+const activatePage = function () {
+  const PINS = getPins();
+
+  enableFormFields(FORM_FIELDS);
+  MAP.classList.remove(`map--faded`);
+  NOTICE_FORM.classList.remove(`ad-form--disabled`);
+  renderPins(PINS);
+  renderCard(PINS[0]);
+  fillAddressField();
+  checkValidGuest();
+};
+
+fillAddressFieldNoActive();
+disableFormFields(FORM_FIELDS);
+
+MAP_PIN_MAIN.addEventListener(`mousedown`, function (evt) {
+  if (evt.button === 0) {
+    activatePage();
+  }
+});
+
+MAP_PIN_MAIN.addEventListener(`keydown`, function (evt) {
+  if (evt.key === `Enter`) {
+    activatePage();
+  }
+});
+
+GUEST_FIELD.addEventListener(`change`, function () {
+  checkValidGuest();
+});
+
+ROOM_FIELD.addEventListener(`change`, function () {
+  checkValidGuest();
+});
