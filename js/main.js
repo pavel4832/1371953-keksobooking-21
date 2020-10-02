@@ -230,12 +230,34 @@ const renderCard = function (pin) {
   PARENT.insertBefore(FRAGMENT, ELEMENT_AFTER);
 };
 
+const fillAddressFieldNoActive = function () {
+  let xLocation = parseInt(MAP_PIN_MAIN.style.left, 10);
+  let yLocation = parseInt(MAP_PIN_MAIN.style.top, 10);
+  ADDRESS_FIELD.value = `${xLocation}, ${yLocation}`;
+};
+
 const fillAddressField = function () {
   let offsetX = Math.floor(PinsDimensions.WIDTH / 2);
   let offsetY = PinsDimensions.HEIGHT;
   let xLocation = parseInt(MAP_PIN_MAIN.style.left, 10) + offsetX;
   let yLocation = parseInt(MAP_PIN_MAIN.style.top, 10) + offsetY;
   ADDRESS_FIELD.value = `${xLocation}, ${yLocation}`;
+};
+
+const checkValidGuest = function () {
+  let roomNumber = ROOM_FIELD.value;
+  let guestNumber = GUEST_FIELD.value;
+
+  if (roomNumber === `100` && guestNumber !== `0`) {
+    GUEST_FIELD.setCustomValidity(`Это жилье не для гостей. Измените выбор`);
+  } else if (guestNumber === `0` && roomNumber !== `100`) {
+    GUEST_FIELD.setCustomValidity(`Это жилье для размещения гостей. Измените выбор комнат`);
+  } else if (roomNumber < guestNumber) {
+    GUEST_FIELD.setCustomValidity(`Количество гостей превышает количество комнат. Уменьшите количество гостей`);
+  } else {
+    GUEST_FIELD.setCustomValidity(``);
+  }
+  GUEST_FIELD.reportValidity();
 };
 
 const activatePage = function () {
@@ -246,36 +268,22 @@ const activatePage = function () {
   NOTICE_FORM.classList.remove(`ad-form--disabled`);
   renderPins(PINS);
   renderCard(PINS[0]);
+  fillAddressField();
+  checkValidGuest();
 };
 
-const checkValidGuest = function () {
-  let roomNumber = ROOM_FIELD.value;
-  let guestNumber = GUEST_FIELD.value;
-
-  if (roomNumber === `100` && guestNumber !== `0`) {
-    GUEST_FIELD.setCustomValidity(`Это жилье не для гостей. Измените выбор`);
-  } else if (roomNumber < guestNumber) {
-    GUEST_FIELD.setCustomValidity(`Количество гостей превышает количество комнат. Уменьшите количество гостей`);
-  } else {
-    GUEST_FIELD.setCustomValidity(``);
-  }
-  GUEST_FIELD.reportValidity();
-};
-
-fillAddressField();
+fillAddressFieldNoActive();
 disableFormFields(FORM_FIELDS);
 
 MAP_PIN_MAIN.addEventListener(`mousedown`, function (evt) {
   if (evt.button === 0) {
     activatePage();
-    checkValidGuest();
   }
 });
 
 MAP_PIN_MAIN.addEventListener(`keydown`, function (evt) {
   if (evt.key === `Enter`) {
     activatePage();
-    checkValidGuest();
   }
 });
 
