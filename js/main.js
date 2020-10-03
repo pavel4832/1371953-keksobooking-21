@@ -44,7 +44,6 @@ const OFFSET_X = 25;
 const OFFSET_Y = 70;
 const NOTICE_FORM = document.querySelector(`.ad-form`);
 const FORM_FIELDS = document.querySelectorAll(`.map__filters select, .map__filters fieldset, .ad-form fieldset`);
-const TITLE_FIELD = NOTICE_FORM.querySelector(`#title`);
 const ADDRESS_FIELD = NOTICE_FORM.querySelector(`#address`);
 const TYPE_FIELD = NOTICE_FORM.querySelector(`#type`);
 const PRICE_FIELD = NOTICE_FORM.querySelector(`#price`);
@@ -291,62 +290,22 @@ const setPinHandlers = function (array) {
   }
 };
 
-const checkValidTitle = function () {
-  const MIN_TITLE_LENGTH = 30;
-  const MAX_TITLE_LENGTH = 100;
-  const VALUE_LENGTH = TITLE_FIELD.value.length;
-
-  if (VALUE_LENGTH < MIN_TITLE_LENGTH) {
-    TITLE_FIELD.setCustomValidity(`Ещё ${(MIN_TITLE_LENGTH - VALUE_LENGTH)} симв.`);
-  } else if (VALUE_LENGTH > MAX_TITLE_LENGTH) {
-    TITLE_FIELD.setCustomValidity(`Удалите лишние ${(VALUE_LENGTH - MAX_TITLE_LENGTH)} симв.`);
-  } else {
-    TITLE_FIELD.setCustomValidity(``);
-  }
-
-  TITLE_FIELD.reportValidity();
-};
-
 const checkValidType = function () {
   let type = TYPE_FIELD.value;
   let minPrice = minApartmentsPrice[type];
 
   PRICE_FIELD.setAttribute(`placeholder`, minPrice);
+  PRICE_FIELD.setAttribute(`min`, minPrice);
 };
 
-const checkValidPrice = function () {
-  let type = TYPE_FIELD.value;
-  let minPrice = minApartmentsPrice[type];
-  let price = PRICE_FIELD.value;
+const checkValidTime = function (timeSource, timeChange) {
+  const time = timeChange.options;
 
-  if (price < parseInt(minPrice, 10)) {
-    PRICE_FIELD.setCustomValidity(`Цена не должна быть меньше ${minPrice}`);
-  } else if (price > MAX_PRICE) {
-    PRICE_FIELD.setCustomValidity(`Цена не должна быть выше ${MAX_PRICE}`);
-  } else {
-    PRICE_FIELD.setCustomValidity(``);
-  }
-  PRICE_FIELD.reportValidity();
-};
-
-const checkValidTimeIn = function () {
-  const timeout = TIME_OUT_FIELD.options;
-
-  for (let i = 0; i < timeout.length; i++) {
-    timeout[i].removeAttribute(`selected`);
+  for (let i = 0; i < time.length; i++) {
+    time[i].removeAttribute(`selected`);
   }
 
-  timeout[TIME_IN_FIELD.selectedIndex].setAttribute(`selected`, `selected`);
-};
-
-const checkValidTimeOut = function () {
-  const timeIn = TIME_IN_FIELD.options;
-
-  for (let i = 0; i < timeIn.length; i++) {
-    timeIn[i].removeAttribute(`selected`);
-  }
-
-  timeIn[TIME_OUT_FIELD.selectedIndex].setAttribute(`selected`, `selected`);
+  time[timeSource.selectedIndex].setAttribute(`selected`, `selected`);
 };
 
 const checkValidGuest = function () {
@@ -365,6 +324,18 @@ const checkValidGuest = function () {
   GUEST_FIELD.reportValidity();
 };
 
+const onMouseLeftPress = function (evt) {
+  if (evt.button === 0) {
+    activatePage();
+  }
+};
+
+const onEnterPress = function (evt) {
+  if (evt.key === `Enter`) {
+    activatePage();
+  }
+};
+
 const activatePage = function () {
   enableFormFields(FORM_FIELDS);
   MAP.classList.remove(`map--faded`);
@@ -375,41 +346,27 @@ const activatePage = function () {
   setPinHandlers(PINS);
   checkValidType();
   checkValidGuest();
+
+  MAP_PIN_MAIN.removeEventListener(`mousedown`, onMouseLeftPress);
+  MAP_PIN_MAIN.removeEventListener(`keydown`, onEnterPress);
 };
 
 fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.OFFSET_X);
 disableFormFields(FORM_FIELDS);
 
-MAP_PIN_MAIN.addEventListener(`mousedown`, function (evt) {
-  if (evt.button === 0) {
-    activatePage();
-  }
-});
-
-MAP_PIN_MAIN.addEventListener(`keydown`, function (evt) {
-  if (evt.key === `Enter`) {
-    activatePage();
-  }
-});
-
-TITLE_FIELD.addEventListener(`input`, function () {
-  checkValidTitle();
-});
+MAP_PIN_MAIN.addEventListener(`mousedown`, onMouseLeftPress);
+MAP_PIN_MAIN.addEventListener(`keydown`, onEnterPress);
 
 TYPE_FIELD.addEventListener(`change`, function () {
   checkValidType();
 });
 
-PRICE_FIELD.addEventListener(`input`, function () {
-  checkValidPrice();
-});
-
 TIME_IN_FIELD.addEventListener(`change`, function () {
-  checkValidTimeIn();
+  checkValidTime(TIME_IN_FIELD, TIME_OUT_FIELD);
 });
 
 TIME_OUT_FIELD.addEventListener(`change`, function () {
-  checkValidTimeOut();
+  checkValidTime(TIME_OUT_FIELD, TIME_IN_FIELD);
 });
 
 GUEST_FIELD.addEventListener(`change`, function () {
