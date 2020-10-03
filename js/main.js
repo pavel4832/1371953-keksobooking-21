@@ -2,9 +2,10 @@
 
 const MAP = document.querySelector(`.map`);
 const MAP_PIN_MAIN = MAP.querySelector(`.map__pin--main`);
-const PinsDimensions = {
+const MainPinDimensions = {
   WIDTH: 62,
-  HEIGHT: 84
+  HEIGHT: 84,
+  OFFSET_X: 31
 };
 const MAP_PINS = document.querySelector(`.map__pins`);
 const PIN_TEMPLATE = document.querySelector(`#pin`)
@@ -13,6 +14,7 @@ const PIN_TEMPLATE = document.querySelector(`#pin`)
 const CARD_TEMPLATE = document.querySelector(`#card`)
   .content
   .querySelector(`.map__card`);
+const PINS = [];
 const PINS_QUANTITY = 8;
 const MIN_PRICE = 1000;
 const MAX_PRICE = 1000000;
@@ -22,6 +24,12 @@ const apartmentsType = {
   flat: `Квартира`,
   house: `Дом`,
   bungalow: `Бунгало`
+};
+const minApartmentsPrice = {
+  palace: `10000`,
+  flat: `1000`,
+  house: `5000`,
+  bungalow: `0`
 };
 const ROOM_QUANTITY = 5;
 const GUEST_QUANTITY = 3;
@@ -36,7 +44,12 @@ const OFFSET_X = 25;
 const OFFSET_Y = 70;
 const NOTICE_FORM = document.querySelector(`.ad-form`);
 const FORM_FIELDS = document.querySelectorAll(`.map__filters select, .map__filters fieldset, .ad-form fieldset`);
+const TITLE_FIELD = NOTICE_FORM.querySelector(`#title`);
 const ADDRESS_FIELD = NOTICE_FORM.querySelector(`#address`);
+const TYPE_FIELD = NOTICE_FORM.querySelector(`#type`);
+const PRICE_FIELD = NOTICE_FORM.querySelector(`#price`);
+const TIME_IN_FIELD = NOTICE_FORM.querySelector(`#timein`);
+const TIME_OUT_FIELD = NOTICE_FORM.querySelector(`#timeout`);
 const ROOM_FIELD = NOTICE_FORM.querySelector(`#room_number`);
 const GUEST_FIELD = NOTICE_FORM.querySelector(`#capacity`);
 
@@ -58,9 +71,7 @@ const getRandomArray = function (array, quantity) {
   return newArray;
 };
 
-const getPins = function () {
-  const array = [];
-
+const getPins = function (array) {
   for (let i = 0; i < PINS_QUANTITY; i++) {
     const xLocation = getRandomNumber(MIN_X_POSITION, MAX_X_POSITION);
     const yLocation = getRandomNumber(MIN_Y_POSITION, MAX_Y_POSITION);
@@ -89,7 +100,6 @@ const getPins = function () {
       }
     };
   }
-  return array;
 };
 
 const renderPins = function (pins) {
@@ -207,7 +217,6 @@ const addPhotos = function (target, element, source) {
 
 const renderCard = function (pin) {
   const FRAGMENT = document.createDocumentFragment();
-  const PARENT = document.querySelector(`.map`);
   const ELEMENT_AFTER = document.querySelector(`.map__filters-container`);
   const CARD_ELEMENT = CARD_TEMPLATE.cloneNode(true);
   const FEATURES_LIST = CARD_ELEMENT.querySelector(`.popup__features`);
@@ -227,22 +236,117 @@ const renderCard = function (pin) {
   addPhotos(PHOTOS_LIST, PHOTO_ITEM, pin.offer.photos);
 
   FRAGMENT.appendChild(CARD_ELEMENT);
-  PARENT.insertBefore(FRAGMENT, ELEMENT_AFTER);
+  MAP.insertBefore(FRAGMENT, ELEMENT_AFTER);
 };
 
-const fillAddressFieldNoActive = function () {
-  const OFFSET = Math.floor(PinsDimensions.WIDTH / 2);
-  let xLocation = parseInt(MAP_PIN_MAIN.style.left, 10) + OFFSET;
-  let yLocation = parseInt(MAP_PIN_MAIN.style.top, 10) + OFFSET;
-  ADDRESS_FIELD.value = `${xLocation}, ${yLocation}`;
-};
-
-const fillAddressField = function () {
-  let offsetX = Math.floor(PinsDimensions.WIDTH / 2);
-  let offsetY = PinsDimensions.HEIGHT;
+const fillAddressField = function (offsetX, offsetY) {
   let xLocation = parseInt(MAP_PIN_MAIN.style.left, 10) + offsetX;
   let yLocation = parseInt(MAP_PIN_MAIN.style.top, 10) + offsetY;
   ADDRESS_FIELD.value = `${xLocation}, ${yLocation}`;
+};
+
+const onCardEscPress = function (evt) {
+  if (evt.key === `Escape`) {
+    evt.preventDefault();
+    closeCard();
+  }
+};
+
+const closeCard = function () {
+  const ELEMENT = MAP.querySelector(`.map__card`);
+  MAP.removeChild(ELEMENT);
+  document.removeEventListener(`keydown`, onCardEscPress);
+};
+
+const showCard = function (element) {
+  let CARD = MAP.querySelector(`.map__card`);
+
+  if (CARD) {
+    MAP.removeChild(CARD);
+  }
+
+  renderCard(element);
+
+  CARD = MAP.querySelector(`.map__card`);
+
+  document.addEventListener(`keydown`, onCardEscPress);
+
+  CARD.querySelector(`.popup__close`).addEventListener(`click`, function () {
+    closeCard();
+  });
+
+  CARD.querySelector(`.popup__close`).addEventListener(`keydown`, function (evt) {
+    if (evt.key === `Enter`) {
+      closeCard();
+    }
+  });
+};
+
+const setPinHandlers = function (array) {
+  const PIN_ELEMENTS = MAP.querySelectorAll(`.map__pin:not(.map__pin--main)`);
+  for (let i = 0; i < array.length; i++) {
+    PIN_ELEMENTS[i].addEventListener(`click`, function () {
+      showCard(array[i]);
+    });
+  }
+};
+
+const checkValidTitle = function () {
+  const MIN_TITLE_LENGTH = 30;
+  const MAX_TITLE_LENGTH = 100;
+  const VALUE_LENGTH = TITLE_FIELD.value.length;
+
+  if (VALUE_LENGTH < MIN_TITLE_LENGTH) {
+    TITLE_FIELD.setCustomValidity(`Ещё ${(MIN_TITLE_LENGTH - VALUE_LENGTH)} симв.`);
+  } else if (VALUE_LENGTH > MAX_TITLE_LENGTH) {
+    TITLE_FIELD.setCustomValidity(`Удалите лишние ${(VALUE_LENGTH - MAX_TITLE_LENGTH)} симв.`);
+  } else {
+    TITLE_FIELD.setCustomValidity(``);
+  }
+
+  TITLE_FIELD.reportValidity();
+};
+
+const checkValidType = function () {
+  let type = TYPE_FIELD.value;
+  let minPrice = minApartmentsPrice[type];
+
+  PRICE_FIELD.setAttribute(`placeholder`, minPrice);
+};
+
+const checkValidPrice = function () {
+  let type = TYPE_FIELD.value;
+  let minPrice = minApartmentsPrice[type];
+  let price = PRICE_FIELD.value;
+
+  if (price < parseInt(minPrice, 10)) {
+    PRICE_FIELD.setCustomValidity(`Цена не должна быть меньше ${minPrice}`);
+  } else if (price > MAX_PRICE) {
+    PRICE_FIELD.setCustomValidity(`Цена не должна быть выше ${MAX_PRICE}`);
+  } else {
+    PRICE_FIELD.setCustomValidity(``);
+  }
+  PRICE_FIELD.reportValidity();
+};
+
+const checkValidTimeIn = function () {
+  const timeout = TIME_OUT_FIELD.options;
+
+  for (let i = 0; i < timeout.length; i++) {
+    timeout[i].removeAttribute(`selected`);
+  }
+
+  timeout[TIME_IN_FIELD.selectedIndex].setAttribute(`selected`, `selected`);
+};
+
+const checkValidTimeOut = function () {
+  const timeIn = TIME_IN_FIELD.options;
+
+  for (let i = 0; i < timeIn.length; i++) {
+    timeIn[i].removeAttribute(`selected`);
+  }
+
+  timeIn[TIME_OUT_FIELD.selectedIndex].setAttribute(`selected`, `selected`);
 };
 
 const checkValidGuest = function () {
@@ -262,18 +366,18 @@ const checkValidGuest = function () {
 };
 
 const activatePage = function () {
-  const PINS = getPins();
-
   enableFormFields(FORM_FIELDS);
   MAP.classList.remove(`map--faded`);
   NOTICE_FORM.classList.remove(`ad-form--disabled`);
+  fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.HEIGHT);
+  getPins(PINS);
   renderPins(PINS);
-  renderCard(PINS[0]);
-  fillAddressField();
+  setPinHandlers(PINS);
+  checkValidType();
   checkValidGuest();
 };
 
-fillAddressFieldNoActive();
+fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.OFFSET_X);
 disableFormFields(FORM_FIELDS);
 
 MAP_PIN_MAIN.addEventListener(`mousedown`, function (evt) {
@@ -286,6 +390,26 @@ MAP_PIN_MAIN.addEventListener(`keydown`, function (evt) {
   if (evt.key === `Enter`) {
     activatePage();
   }
+});
+
+TITLE_FIELD.addEventListener(`input`, function () {
+  checkValidTitle();
+});
+
+TYPE_FIELD.addEventListener(`change`, function () {
+  checkValidType();
+});
+
+PRICE_FIELD.addEventListener(`input`, function () {
+  checkValidPrice();
+});
+
+TIME_IN_FIELD.addEventListener(`change`, function () {
+  checkValidTimeIn();
+});
+
+TIME_OUT_FIELD.addEventListener(`change`, function () {
+  checkValidTimeOut();
 });
 
 GUEST_FIELD.addEventListener(`change`, function () {
