@@ -18,6 +18,9 @@
       PIN_ELEMENT.querySelector(`img`).src = pins[i].author.avatar;
       PIN_ELEMENT.querySelector(`img`).alt = pins[i].offer.title;
       FRAGMENT.appendChild(PIN_ELEMENT);
+      PIN_ELEMENT.addEventListener(`click`, function () {
+        window.showCard(pins[i]);
+      });
     }
     MAP_PINS.appendChild(FRAGMENT);
   };

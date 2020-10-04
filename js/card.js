@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  const MAP = document.querySelector(`.map`);
   const CARD_TEMPLATE = document.querySelector(`#card`)
     .content
     .querySelector(`.map__card`);
@@ -119,6 +120,6 @@
     addPhotos(PHOTOS_LIST, PHOTO_ITEM, pin.offer.photos);
 
     FRAGMENT.appendChild(CARD_ELEMENT);
-    window.data.MAP.insertBefore(FRAGMENT, ELEMENT_AFTER);
+    MAP.insertBefore(FRAGMENT, ELEMENT_AFTER);
   };
 })();

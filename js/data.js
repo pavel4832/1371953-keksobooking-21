@@ -1,12 +1,6 @@
 'use strict';
 
 (function () {
-  window.data = {
-    MAP: document.querySelector(`.map`),
-    NOTICE_FORM: document.querySelector(`.ad-form`),
-    FORM_FIELDS: document.querySelectorAll(`.map__filters select, .map__filters fieldset, .ad-form fieldset`),
-    PINS: []
-  };
   const MAP_PINS = document.querySelector(`.map__pins`);
   const PINS_QUANTITY = 8;
   const MIN_PRICE = 1000;
@@ -40,12 +34,13 @@
     return newArray;
   };
 
-  const getPins = function (array) {
+  window.getPins = function () {
+    const array = [];
+
     for (let i = 0; i < PINS_QUANTITY; i++) {
       const xLocation = getRandomNumber(MIN_X_POSITION, MAX_X_POSITION);
       const yLocation = getRandomNumber(MIN_Y_POSITION, MAX_Y_POSITION);
       const photosNumber = getRandomNumber(1, PHOTOS.length);
-
       array[i] = {
         author: {
           avatar: `img/avatars/user0` + (i + 1) + `.png`
@@ -69,7 +64,6 @@
         }
       };
     }
+    return array;
   };
-
-  getPins(window.data.PINS);
 })();
