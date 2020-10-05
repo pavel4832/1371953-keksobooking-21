@@ -19,16 +19,10 @@
     bungalow: `0`
   };
 
-  window.form = {
-    fillAddressField: function (offsetX, offsetY) {
-      let xLocation = parseInt(MAP_PIN_MAIN.style.left, 10) + offsetX;
-      let yLocation = parseInt(MAP_PIN_MAIN.style.top, 10) + offsetY;
-      ADDRESS_FIELD.value = `${xLocation}, ${yLocation}`;
-    },
-    activateForm: function () {
-      checkValidType();
-      checkValidGuest();
-    }
+  window.fillAddressField = function (offsetX, offsetY) {
+    let xLocation = parseInt(MAP_PIN_MAIN.style.left, 10) + offsetX;
+    let yLocation = parseInt(MAP_PIN_MAIN.style.top, 10) + offsetY;
+    ADDRESS_FIELD.value = `${xLocation}, ${yLocation}`;
   };
 
   const checkValidType = function () {
@@ -64,6 +58,13 @@
 
     time[timeSource.selectedIndex].setAttribute(`selected`, `selected`);
   };
+
+  const activateForm = function () {
+    checkValidType();
+    checkValidGuest();
+  };
+
+  activateForm();
 
   TYPE_FIELD.addEventListener(`change`, function () {
     checkValidType();
