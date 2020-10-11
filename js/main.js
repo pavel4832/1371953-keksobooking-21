@@ -5,6 +5,7 @@
   const MAP_PIN_MAIN = MAP.querySelector(`.map__pin--main`);
   const NOTICE_FORM = document.querySelector(`.ad-form`);
   const FORM_FIELDS = document.querySelectorAll(`.map__filters select, .map__filters fieldset, .ad-form fieldset`);
+  const RESET_BUTTON = document.querySelector(`.ad-form__reset`);
   const MainPinDimensions = {
     WIDTH: 62,
     HEIGHT: 84,
@@ -53,9 +54,11 @@
     window.backend.load(window.pin.renderPins, errorLoadHandler);
     MAP_PIN_MAIN.removeEventListener(`mousedown`, onMouseLeftPress);
     MAP_PIN_MAIN.removeEventListener(`keydown`, onEnterPress);
+    RESET_BUTTON.addEventListener(`click`, resetPage);
   };
 
   const deactivatePage = function () {
+    NOTICE_FORM.reset();
     disableFormFields(FORM_FIELDS);
     window.form.fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.OFFSET_X);
     MAP.classList.add(`map--faded`);
@@ -63,6 +66,12 @@
     MAP_PIN_MAIN.addEventListener(`mousedown`, onMouseLeftPress);
     MAP_PIN_MAIN.addEventListener(`keydown`, onEnterPress);
     window.pin.removePins();
+  };
+
+  const resetPage = function (evt) {
+    evt.preventDefault();
+    deactivatePage();
+    RESET_BUTTON.removeEventListener(`click`, resetPage);
   };
 
   deactivatePage();

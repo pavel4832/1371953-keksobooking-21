@@ -113,8 +113,6 @@
 
       document.addEventListener(`keydown`, onPopupEscPress);
       document.addEventListener(`click`, onPopupOutsideClick);
-
-      NOTICE_FORM.reset();
     },
     errorUploadHandler: function () {
       const FRAGMENT = document.createDocumentFragment();
