@@ -2,6 +2,7 @@
 
 (function () {
   const LOAD_URL = `https://21.javascript.pages.academy/keksobooking/data`;
+  const UPLOAD_URL = `https://21.javascript.pages.academy/keksobooking`;
   const StatusCode = {
     OK: 200
   };
@@ -30,6 +31,29 @@
 
       XHR.open(`GET`, LOAD_URL);
       XHR.send();
+    },
+    upload: function (data, onSuccess, onError) {
+      const XHR = new XMLHttpRequest();
+      XHR.responseType = `json`;
+
+      XHR.addEventListener(`load`, function () {
+        if (XHR.status === StatusCode.OK) {
+          onSuccess();
+        } else {
+          onError();
+        }
+      });
+      XHR.addEventListener(`error`, function () {
+        onError();
+      });
+      XHR.addEventListener(`timeout`, function () {
+        onError();
+      });
+
+      XHR.timeout = TIMEOUT_IN_MS;
+
+      XHR.open(`POST`, UPLOAD_URL);
+      XHR.send(data);
     }
   };
 })();

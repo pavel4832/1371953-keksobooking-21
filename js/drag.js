@@ -56,7 +56,7 @@
       checkValidPosition(newCoords);
       MAP_PIN_MAIN.style.top = (newCoords.y) + `px`;
       MAP_PIN_MAIN.style.left = (newCoords.x) + `px`;
-      window.fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.HEIGHT);
+      window.form.fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.HEIGHT);
     };
 
     const onMouseMove = function (moveEvt) {

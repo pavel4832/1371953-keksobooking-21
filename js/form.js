@@ -1,9 +1,15 @@
 'use strict';
 
 (function () {
+  const PAGE = document.querySelector(`main`);
   const MAP = document.querySelector(`.map`);
   const MAP_PIN_MAIN = MAP.querySelector(`.map__pin--main`);
-
+  const SUCCESS_MESSAGE_TEMPLATE = document.querySelector(`#success`)
+    .content
+    .querySelector(`.success`);
+  const ERROR_MESSAGE_TEMPLATE = document.querySelector(`#error`)
+    .content
+    .querySelector(`.error`);
   const NOTICE_FORM = document.querySelector(`.ad-form`);
   const ADDRESS_FIELD = NOTICE_FORM.querySelector(`#address`);
   const TYPE_FIELD = NOTICE_FORM.querySelector(`#type`);
@@ -17,12 +23,6 @@
     flat: `1000`,
     house: `5000`,
     bungalow: `0`
-  };
-
-  window.fillAddressField = function (offsetX, offsetY) {
-    let xLocation = parseInt(MAP_PIN_MAIN.style.left, 10) + offsetX;
-    let yLocation = parseInt(MAP_PIN_MAIN.style.top, 10) + offsetY;
-    ADDRESS_FIELD.value = `${xLocation}, ${yLocation}`;
   };
 
   const checkValidType = function () {
@@ -62,6 +62,73 @@
   const activateForm = function () {
     checkValidType();
     checkValidGuest();
+  };
+
+  const getTargetElement = function () {
+    if (PAGE.classList.contains(`.error`)) {
+      return PAGE.querySelector(`.error`);
+    } else {
+      return PAGE.querySelector(`.success`);
+    }
+  };
+
+  const onPopupEscPress = function (evt) {
+    window.util.isEscEvent(evt, closePopup);
+  };
+
+  const onEnterPress = function (evt) {
+    window.util.isEnterEvent(evt, closePopup);
+  };
+
+  const onPopupOutsideClick = function (evt) {
+    const ELEMENT = getTargetElement();
+
+    evt.preventDefault();
+
+    if (evt.target === ELEMENT) {
+      closePopup();
+    }
+  };
+
+  const closePopup = function () {
+    const ELEMENT = getTargetElement();
+
+    PAGE.removeChild(ELEMENT);
+    document.removeEventListener(`keydown`, onPopupEscPress);
+    document.removeEventListener(`click`, onPopupOutsideClick);
+  };
+
+  window.form = {
+    fillAddressField: function (offsetX, offsetY) {
+      let xLocation = parseInt(MAP_PIN_MAIN.style.left, 10) + offsetX;
+      let yLocation = parseInt(MAP_PIN_MAIN.style.top, 10) + offsetY;
+      ADDRESS_FIELD.value = `${xLocation}, ${yLocation}`;
+    },
+    successHandler: function () {
+      const FRAGMENT = document.createDocumentFragment();
+      const SUCCESS_MESSAGE = SUCCESS_MESSAGE_TEMPLATE.cloneNode(true);
+
+      FRAGMENT.appendChild(SUCCESS_MESSAGE);
+      PAGE.appendChild(FRAGMENT);
+
+      document.addEventListener(`keydown`, onPopupEscPress);
+      document.addEventListener(`click`, onPopupOutsideClick);
+
+      NOTICE_FORM.reset();
+    },
+    errorUploadHandler: function () {
+      const FRAGMENT = document.createDocumentFragment();
+      const ERROR_MESSAGE = ERROR_MESSAGE_TEMPLATE.cloneNode(true);
+      const TRY_AGAIN_BUTTON = ERROR_MESSAGE.querySelector(`.error__button`);
+
+      FRAGMENT.appendChild(ERROR_MESSAGE);
+      PAGE.appendChild(FRAGMENT);
+
+      TRY_AGAIN_BUTTON.addEventListener(`click`, closePopup);
+      TRY_AGAIN_BUTTON.addEventListener(`keydown`, onEnterPress);
+      document.addEventListener(`keydown`, onPopupEscPress);
+      document.addEventListener(`click`, onPopupOutsideClick);
+    }
   };
 
   activateForm();
