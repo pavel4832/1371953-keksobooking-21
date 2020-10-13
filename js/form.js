@@ -1,9 +1,16 @@
 'use strict';
 
 (function () {
+  const UPLOAD_URL = `https://21.javascript.pages.academy/keksobooking`;
+  const PAGE = document.querySelector(`main`);
   const MAP = document.querySelector(`.map`);
   const MAP_PIN_MAIN = MAP.querySelector(`.map__pin--main`);
-
+  const SUCCESS_MESSAGE_TEMPLATE = document.querySelector(`#success`)
+    .content
+    .querySelector(`.success`);
+  const ERROR_MESSAGE_TEMPLATE = document.querySelector(`#error`)
+    .content
+    .querySelector(`.error`);
   const NOTICE_FORM = document.querySelector(`.ad-form`);
   const ADDRESS_FIELD = NOTICE_FORM.querySelector(`#address`);
   const TYPE_FIELD = NOTICE_FORM.querySelector(`#type`);
@@ -64,6 +71,66 @@
     checkValidGuest();
   };
 
+  const getTargetElement = function () {
+    if (PAGE.querySelector(`.error`)) {
+      return PAGE.querySelector(`.error`);
+    } else {
+      return PAGE.querySelector(`.success`);
+    }
+  };
+
+  const onPopupEscPress = function (evt) {
+    window.util.isEscEvent(evt, closePopup);
+  };
+
+  const onEnterPress = function (evt) {
+    window.util.isEnterEvent(evt, closePopup);
+  };
+
+  const onPopupOutsideClick = function (evt) {
+    const ELEMENT = getTargetElement();
+
+    evt.preventDefault();
+
+    if (evt.target === ELEMENT) {
+      closePopup();
+    }
+  };
+
+  const closePopup = function () {
+    const ELEMENT = getTargetElement();
+
+    PAGE.removeChild(ELEMENT);
+    document.removeEventListener(`keydown`, onPopupEscPress);
+    document.removeEventListener(`click`, onPopupOutsideClick);
+  };
+
+  const successHandler = function () {
+    const FRAGMENT = document.createDocumentFragment();
+    const SUCCESS_MESSAGE = SUCCESS_MESSAGE_TEMPLATE.cloneNode(true);
+
+    FRAGMENT.appendChild(SUCCESS_MESSAGE);
+    PAGE.appendChild(FRAGMENT);
+
+    document.addEventListener(`keydown`, onPopupEscPress);
+    document.addEventListener(`click`, onPopupOutsideClick);
+    window.deactivatePage();
+  };
+
+  const errorUploadHandler = function () {
+    const FRAGMENT = document.createDocumentFragment();
+    const ERROR_MESSAGE = ERROR_MESSAGE_TEMPLATE.cloneNode(true);
+    const TRY_AGAIN_BUTTON = ERROR_MESSAGE.querySelector(`.error__button`);
+
+    FRAGMENT.appendChild(ERROR_MESSAGE);
+    PAGE.appendChild(FRAGMENT);
+
+    TRY_AGAIN_BUTTON.addEventListener(`click`, closePopup);
+    TRY_AGAIN_BUTTON.addEventListener(`keydown`, onEnterPress);
+    document.addEventListener(`keydown`, onPopupEscPress);
+    document.addEventListener(`click`, onPopupOutsideClick);
+  };
+
   activateForm();
 
   TYPE_FIELD.addEventListener(`change`, function () {
@@ -84,5 +151,11 @@
 
   ROOM_FIELD.addEventListener(`change`, function () {
     checkValidGuest();
+  });
+
+  NOTICE_FORM.addEventListener(`submit`, function (evt) {
+    evt.preventDefault();
+
+    window.load(UPLOAD_URL, `POST`, successHandler, errorUploadHandler, new FormData(NOTICE_FORM));
   });
 })();
