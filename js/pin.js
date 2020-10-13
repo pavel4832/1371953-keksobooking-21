@@ -19,7 +19,7 @@
         PIN_ELEMENT.querySelector(`img`).alt = pins[i].offer.title;
         FRAGMENT.appendChild(PIN_ELEMENT);
         PIN_ELEMENT.addEventListener(`click`, function () {
-          window.showCard(pins[i]);
+          window.map.showCard(pins[i]);
         });
       }
 

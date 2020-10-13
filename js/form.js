@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  const UPLOAD_URL = `https://21.javascript.pages.academy/keksobooking`;
   const PAGE = document.querySelector(`main`);
   const MAP = document.querySelector(`.map`);
   const MAP_PIN_MAIN = MAP.querySelector(`.map__pin--main`);
@@ -23,6 +24,12 @@
     flat: `1000`,
     house: `5000`,
     bungalow: `0`
+  };
+
+  window.fillAddressField = function (offsetX, offsetY) {
+    let xLocation = parseInt(MAP_PIN_MAIN.style.left, 10) + offsetX;
+    let yLocation = parseInt(MAP_PIN_MAIN.style.top, 10) + offsetY;
+    ADDRESS_FIELD.value = `${xLocation}, ${yLocation}`;
   };
 
   const checkValidType = function () {
@@ -65,7 +72,7 @@
   };
 
   const getTargetElement = function () {
-    if (PAGE.classList.contains(`.error`)) {
+    if (PAGE.querySelector(`.error`)) {
       return PAGE.querySelector(`.error`);
     } else {
       return PAGE.querySelector(`.success`);
@@ -98,35 +105,30 @@
     document.removeEventListener(`click`, onPopupOutsideClick);
   };
 
-  window.form = {
-    fillAddressField: function (offsetX, offsetY) {
-      let xLocation = parseInt(MAP_PIN_MAIN.style.left, 10) + offsetX;
-      let yLocation = parseInt(MAP_PIN_MAIN.style.top, 10) + offsetY;
-      ADDRESS_FIELD.value = `${xLocation}, ${yLocation}`;
-    },
-    successHandler: function () {
-      const FRAGMENT = document.createDocumentFragment();
-      const SUCCESS_MESSAGE = SUCCESS_MESSAGE_TEMPLATE.cloneNode(true);
+  const successHandler = function () {
+    const FRAGMENT = document.createDocumentFragment();
+    const SUCCESS_MESSAGE = SUCCESS_MESSAGE_TEMPLATE.cloneNode(true);
 
-      FRAGMENT.appendChild(SUCCESS_MESSAGE);
-      PAGE.appendChild(FRAGMENT);
+    FRAGMENT.appendChild(SUCCESS_MESSAGE);
+    PAGE.appendChild(FRAGMENT);
 
-      document.addEventListener(`keydown`, onPopupEscPress);
-      document.addEventListener(`click`, onPopupOutsideClick);
-    },
-    errorUploadHandler: function () {
-      const FRAGMENT = document.createDocumentFragment();
-      const ERROR_MESSAGE = ERROR_MESSAGE_TEMPLATE.cloneNode(true);
-      const TRY_AGAIN_BUTTON = ERROR_MESSAGE.querySelector(`.error__button`);
+    document.addEventListener(`keydown`, onPopupEscPress);
+    document.addEventListener(`click`, onPopupOutsideClick);
+    window.deactivatePage();
+  };
 
-      FRAGMENT.appendChild(ERROR_MESSAGE);
-      PAGE.appendChild(FRAGMENT);
+  const errorUploadHandler = function () {
+    const FRAGMENT = document.createDocumentFragment();
+    const ERROR_MESSAGE = ERROR_MESSAGE_TEMPLATE.cloneNode(true);
+    const TRY_AGAIN_BUTTON = ERROR_MESSAGE.querySelector(`.error__button`);
 
-      TRY_AGAIN_BUTTON.addEventListener(`click`, closePopup);
-      TRY_AGAIN_BUTTON.addEventListener(`keydown`, onEnterPress);
-      document.addEventListener(`keydown`, onPopupEscPress);
-      document.addEventListener(`click`, onPopupOutsideClick);
-    }
+    FRAGMENT.appendChild(ERROR_MESSAGE);
+    PAGE.appendChild(FRAGMENT);
+
+    TRY_AGAIN_BUTTON.addEventListener(`click`, closePopup);
+    TRY_AGAIN_BUTTON.addEventListener(`keydown`, onEnterPress);
+    document.addEventListener(`keydown`, onPopupEscPress);
+    document.addEventListener(`click`, onPopupOutsideClick);
   };
 
   activateForm();
@@ -149,5 +151,11 @@
 
   ROOM_FIELD.addEventListener(`change`, function () {
     checkValidGuest();
+  });
+
+  NOTICE_FORM.addEventListener(`submit`, function (evt) {
+    evt.preventDefault();
+
+    window.load(UPLOAD_URL, `POST`, successHandler, errorUploadHandler, new FormData(NOTICE_FORM));
   });
 })();

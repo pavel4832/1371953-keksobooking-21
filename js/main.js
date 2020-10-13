@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  const LOAD_URL = `https://21.javascript.pages.academy/keksobooking/data`;
   const MAP = document.querySelector(`.map`);
   const MAP_PIN_MAIN = MAP.querySelector(`.map__pin--main`);
   const NOTICE_FORM = document.querySelector(`.ad-form`);
@@ -50,36 +51,30 @@
     enableFormFields(FORM_FIELDS);
     MAP.classList.remove(`map--faded`);
     NOTICE_FORM.classList.remove(`ad-form--disabled`);
-    window.form.fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.HEIGHT);
-    window.backend.load(window.pin.renderPins, errorLoadHandler);
+    window.fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.HEIGHT);
+    window.load(LOAD_URL, `GET`, window.pin.renderPins, errorLoadHandler);
     MAP_PIN_MAIN.removeEventListener(`mousedown`, onMouseLeftPress);
     MAP_PIN_MAIN.removeEventListener(`keydown`, onEnterPress);
     RESET_BUTTON.addEventListener(`click`, resetPage);
   };
 
-  const deactivatePage = function () {
+  window.deactivatePage = function () {
     NOTICE_FORM.reset();
     disableFormFields(FORM_FIELDS);
-    window.form.fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.OFFSET_X);
+    window.fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.OFFSET_X);
     MAP.classList.add(`map--faded`);
     NOTICE_FORM.classList.add(`ad-form--disabled`);
     MAP_PIN_MAIN.addEventListener(`mousedown`, onMouseLeftPress);
     MAP_PIN_MAIN.addEventListener(`keydown`, onEnterPress);
     window.pin.removePins();
+    window.map.closeCard();
   };
 
   const resetPage = function (evt) {
     evt.preventDefault();
-    deactivatePage();
+    window.deactivatePage();
     RESET_BUTTON.removeEventListener(`click`, resetPage);
   };
 
-  deactivatePage();
-
-  NOTICE_FORM.addEventListener(`submit`, function (evt) {
-    evt.preventDefault();
-
-    window.backend.upload(new FormData(NOTICE_FORM), window.form.successHandler, window.form.errorUploadHandler);
-    deactivatePage();
-  });
+  window.deactivatePage();
 })();
