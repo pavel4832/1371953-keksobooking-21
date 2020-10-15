@@ -72,11 +72,9 @@
   };
 
   const getTargetElement = function () {
-    if (PAGE.querySelector(`.error`)) {
-      return PAGE.querySelector(`.error`);
-    } else {
-      return PAGE.querySelector(`.success`);
-    }
+    const error = PAGE.querySelector(`.error`);
+    const success = PAGE.querySelector(`.success`);
+    return error ? error : success;
   };
 
   const onPopupEscPress = function (evt) {
