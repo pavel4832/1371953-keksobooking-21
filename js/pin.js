@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  const MAX_PIN_QUANTITY = 5;
   const MAP_PINS = document.querySelector(`.map__pins`);
   const PIN_TEMPLATE = document.querySelector(`#pin`)
     .content
@@ -11,8 +12,9 @@
   window.pin = {
     renderPins: function (pins) {
       const FRAGMENT = document.createDocumentFragment();
+      let pinQuantity = pins.length > MAX_PIN_QUANTITY ? MAX_PIN_QUANTITY : pins.length;
 
-      for (let i = 0; i < pins.length; i++) {
+      for (let i = 0; i < pinQuantity; i++) {
         const PIN_ELEMENT = PIN_TEMPLATE.cloneNode(true);
         PIN_ELEMENT.style = `left: ${pins[i].location.x - OFFSET_X}px; top: ${pins[i].location.y - OFFSET_Y}px;`;
         PIN_ELEMENT.querySelector(`img`).src = pins[i].author.avatar;
