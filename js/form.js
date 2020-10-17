@@ -78,11 +78,15 @@
   };
 
   const onPopupEscPress = function (evt) {
-    window.util.isEscEvent(evt, closePopup);
+    window.util.isEscEvent(evt, function () {
+      closePopup();
+    });
   };
 
   const onEnterPress = function (evt) {
-    window.util.isEnterEvent(evt, closePopup);
+    window.util.isEnterEvent(evt, function () {
+      closePopup();
+    });
   };
 
   const onPopupOutsideClick = function (evt) {
@@ -103,7 +107,7 @@
     document.removeEventListener(`click`, onPopupOutsideClick);
   };
 
-  const successHandler = function () {
+  const onDataLoadSuccess = function () {
     const FRAGMENT = document.createDocumentFragment();
     const SUCCESS_MESSAGE = SUCCESS_MESSAGE_TEMPLATE.cloneNode(true);
 
@@ -154,6 +158,6 @@
   NOTICE_FORM.addEventListener(`submit`, function (evt) {
     evt.preventDefault();
 
-    window.load(UPLOAD_URL, `POST`, successHandler, errorUploadHandler, new FormData(NOTICE_FORM));
+    window.load(UPLOAD_URL, `POST`, onDataLoadSuccess, errorUploadHandler, new FormData(NOTICE_FORM));
   });
 })();
