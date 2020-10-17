@@ -5,6 +5,7 @@
   const MAP = document.querySelector(`.map`);
   const MAP_PIN_MAIN = MAP.querySelector(`.map__pin--main`);
   const NOTICE_FORM = document.querySelector(`.ad-form`);
+  const ALL_FIELDS = document.querySelectorAll(`.ad-form fieldset, .map__filters select, .map__filters fieldset`);
   const FORM_FIELDS = document.querySelectorAll(`.ad-form fieldset`);
   const FILTER_FIELDS = document.querySelectorAll(`.map__filters select, .map__filters fieldset`);
   const RESET_BUTTON = document.querySelector(`.ad-form__reset`);
@@ -72,8 +73,7 @@
 
   window.deactivatePage = function () {
     NOTICE_FORM.reset();
-    disableFormFields(FORM_FIELDS);
-    disableFormFields(FILTER_FIELDS);
+    disableFormFields(ALL_FIELDS);
     window.fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.OFFSET_X);
     MAP.classList.add(`map--faded`);
     NOTICE_FORM.classList.add(`ad-form--disabled`);

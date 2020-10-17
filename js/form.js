@@ -119,7 +119,7 @@
     window.deactivatePage();
   };
 
-  const errorUploadHandler = function () {
+  const onDataLoadError = function () {
     const FRAGMENT = document.createDocumentFragment();
     const ERROR_MESSAGE = ERROR_MESSAGE_TEMPLATE.cloneNode(true);
     const TRY_AGAIN_BUTTON = ERROR_MESSAGE.querySelector(`.error__button`);
@@ -158,6 +158,6 @@
   NOTICE_FORM.addEventListener(`submit`, function (evt) {
     evt.preventDefault();
 
-    window.load(UPLOAD_URL, `POST`, onDataLoadSuccess, errorUploadHandler, new FormData(NOTICE_FORM));
+    window.load(UPLOAD_URL, `POST`, onDataLoadSuccess, onDataLoadError, new FormData(NOTICE_FORM));
   });
 })();
