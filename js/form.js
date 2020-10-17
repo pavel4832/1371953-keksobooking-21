@@ -72,19 +72,21 @@
   };
 
   const getTargetElement = function () {
-    if (PAGE.querySelector(`.error`)) {
-      return PAGE.querySelector(`.error`);
-    } else {
-      return PAGE.querySelector(`.success`);
-    }
+    const error = PAGE.querySelector(`.error`);
+    const success = PAGE.querySelector(`.success`);
+    return error ? error : success;
   };
 
   const onPopupEscPress = function (evt) {
-    window.util.isEscEvent(evt, closePopup);
+    window.util.isEscEvent(evt, function () {
+      closePopup();
+    });
   };
 
   const onEnterPress = function (evt) {
-    window.util.isEnterEvent(evt, closePopup);
+    window.util.isEnterEvent(evt, function () {
+      closePopup();
+    });
   };
 
   const onPopupOutsideClick = function (evt) {
@@ -105,7 +107,7 @@
     document.removeEventListener(`click`, onPopupOutsideClick);
   };
 
-  const successHandler = function () {
+  const onDataLoadSuccess = function () {
     const FRAGMENT = document.createDocumentFragment();
     const SUCCESS_MESSAGE = SUCCESS_MESSAGE_TEMPLATE.cloneNode(true);
 
@@ -117,7 +119,7 @@
     window.deactivatePage();
   };
 
-  const errorUploadHandler = function () {
+  const onDataLoadError = function () {
     const FRAGMENT = document.createDocumentFragment();
     const ERROR_MESSAGE = ERROR_MESSAGE_TEMPLATE.cloneNode(true);
     const TRY_AGAIN_BUTTON = ERROR_MESSAGE.querySelector(`.error__button`);
@@ -156,6 +158,6 @@
   NOTICE_FORM.addEventListener(`submit`, function (evt) {
     evt.preventDefault();
 
-    window.load(UPLOAD_URL, `POST`, successHandler, errorUploadHandler, new FormData(NOTICE_FORM));
+    window.load(UPLOAD_URL, `POST`, onDataLoadSuccess, onDataLoadError, new FormData(NOTICE_FORM));
   });
 })();
