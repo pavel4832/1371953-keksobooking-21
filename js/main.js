@@ -2,12 +2,14 @@
 
 (function () {
   const FILTER = document.querySelector(`.map__filters`);
-  const TYPE_FIELD = FILTER.querySelector(`#housing-type`);
+  const FORM_ELEMENTS = FILTER.querySelectorAll(`.map__filter, .map__checkbox`);
 
   window.deactivatePage();
   window.scrollTo(0, 0);
 
-  TYPE_FIELD.addEventListener(`change`, function () {
-    window.filter.onTypeChange(window.pins);
-  });
+  for (let i = 0; i < FORM_ELEMENTS.length; i++) {
+    FORM_ELEMENTS[i].addEventListener(`change`, function () {
+      window.filterPins(window.pins);
+    });
+  }
 })();
