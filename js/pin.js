@@ -9,6 +9,16 @@
   const OFFSET_X = 25;
   const OFFSET_Y = 70;
 
+  const clearPin = function () {
+    const PINS = document.querySelectorAll(`.map__pin`);
+
+    PINS.forEach(function (element) {
+      if (element.classList.contains(`map__pin--active`)) {
+        element.classList.remove(`map__pin--active`);
+      }
+    });
+  };
+
   window.pin = {
     renderPins: function (pins) {
       const FRAGMENT = document.createDocumentFragment();
@@ -21,6 +31,8 @@
         PIN_ELEMENT.querySelector(`img`).alt = pins[i].offer.title;
         FRAGMENT.appendChild(PIN_ELEMENT);
         PIN_ELEMENT.addEventListener(`click`, function () {
+          clearPin();
+          PIN_ELEMENT.classList.add(`map__pin--active`);
           window.map.showCard(pins[i]);
         });
       }
