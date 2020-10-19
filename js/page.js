@@ -66,7 +66,8 @@
     window.load(LOAD_URL, `GET`, onDataLoadSuccess, onDataLoadError);
     MAP_PIN_MAIN.removeEventListener(`mousedown`, onMouseLeftPress);
     MAP_PIN_MAIN.removeEventListener(`keydown`, onEnterPress);
-    RESET_BUTTON.addEventListener(`click`, function () {
+    RESET_BUTTON.addEventListener(`click`, function (evt) {
+      evt.preventDefault();
       resetPage();
     });
   };
@@ -83,8 +84,7 @@
     window.map.closeCard();
   };
 
-  const resetPage = function (evt) {
-    evt.preventDefault();
+  const resetPage = function () {
     window.deactivatePage();
     RESET_BUTTON.removeEventListener(`click`, function () {
       resetPage();
