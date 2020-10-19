@@ -58,6 +58,11 @@
     enableFormFields(FILTER_FIELDS);
   };
 
+  const onResetPress = function () {
+    window.deactivatePage();
+    RESET_BUTTON.removeEventListener(`click`, onResetPress);
+  };
+
   const activatePage = function () {
     enableFormFields(FORM_FIELDS);
     MAP.classList.remove(`map--faded`);
@@ -66,10 +71,7 @@
     window.load(LOAD_URL, `GET`, onDataLoadSuccess, onDataLoadError);
     MAP_PIN_MAIN.removeEventListener(`mousedown`, onMouseLeftPress);
     MAP_PIN_MAIN.removeEventListener(`keydown`, onEnterPress);
-    RESET_BUTTON.addEventListener(`click`, function (evt) {
-      evt.preventDefault();
-      resetPage();
-    });
+    RESET_BUTTON.addEventListener(`click`, onResetPress);
   };
 
   window.deactivatePage = function () {
@@ -82,12 +84,5 @@
     MAP_PIN_MAIN.addEventListener(`keydown`, onEnterPress);
     window.pin.removePins();
     window.map.closeCard();
-  };
-
-  const resetPage = function () {
-    window.deactivatePage();
-    RESET_BUTTON.removeEventListener(`click`, function () {
-      resetPage();
-    });
   };
 })();
