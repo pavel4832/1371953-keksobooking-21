@@ -1,12 +1,10 @@
 'use strict';
 
-(function () {
-  const FILTER = document.querySelector(`.map__filters`);
+const FILTER = document.querySelector(`.map__filters`);
 
-  window.deactivatePage();
-  window.scrollTo(0, 0);
+window.deactivatePage();
+window.scrollTo(0, 0);
 
-  FILTER.addEventListener(`change`, function () {
-    window.filterPins(window.pins);
-  });
-})();
+FILTER.addEventListener(`change`, () => {
+  window.filterPins(window.pins);
+});
