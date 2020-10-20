@@ -1,125 +1,123 @@
 'use strict';
 
-(function () {
-  const MAP = document.querySelector(`.map`);
-  const CARD_TEMPLATE = document.querySelector(`#card`)
-    .content
-    .querySelector(`.map__card`);
-  const apartmentsType = {
-    palace: `Дворец`,
-    flat: `Квартира`,
-    house: `Дом`,
-    bungalow: `Бунгало`
-  };
+const MAP = document.querySelector(`.map`);
+const CARD_TEMPLATE = document.querySelector(`#card`)
+  .content
+  .querySelector(`.map__card`);
+const apartmentsType = {
+  palace: `Дворец`,
+  flat: `Квартира`,
+  house: `Дом`,
+  bungalow: `Бунгало`
+};
 
-  const getRoomText = (rooms) => {
-    let room;
+const getRoomText = (rooms) => {
+  let room;
 
-    if (rooms === 1) {
-      room = `комната`;
-    } else if (rooms === 5) {
-      room = `комнат`;
-    } else {
-      room = `комнаты`;
-    }
-    return room;
-  };
+  if (rooms === 1) {
+    room = `комната`;
+  } else if (rooms === 5) {
+    room = `комнат`;
+  } else {
+    room = `комнаты`;
+  }
+  return room;
+};
 
-  const getGuestText = (guests) => {
-    let guest;
+const getGuestText = (guests) => {
+  let guest;
 
-    if (guests === 1) {
-      guest = `гостя`;
-    } else {
-      guest = `гостей`;
-    }
-    return guest;
-  };
+  if (guests === 1) {
+    guest = `гостя`;
+  } else {
+    guest = `гостей`;
+  }
+  return guest;
+};
 
-  const fillSrcField = (element, src) => {
-    if (src) {
-      element.src = src;
-    } else {
-      element.style.display = `none`;
-    }
-  };
+const fillSrcField = (element, src) => {
+  if (src) {
+    element.src = src;
+  } else {
+    element.style.display = `none`;
+  }
+};
 
-  const fillTextField = (element, text) => {
-    if (text) {
-      element.textContent = text;
-    } else {
-      element.style.display = `none`;
-    }
-  };
+const fillTextField = (element, text) => {
+  if (text) {
+    element.textContent = text;
+  } else {
+    element.style.display = `none`;
+  }
+};
 
-  const fillTextCapacity = (element, rooms, guests) => {
-    const ROOM_TEXT = getRoomText(rooms);
-    const GUEST_TEXT = getGuestText(guests);
+const fillTextCapacity = (element, rooms, guests) => {
+  const ROOM_TEXT = getRoomText(rooms);
+  const GUEST_TEXT = getGuestText(guests);
 
-    if (rooms && guests) {
-      element.textContent = `${rooms} ${ROOM_TEXT} для ${guests} ${GUEST_TEXT}`;
-    } else {
-      element.style.display = `none`;
-    }
-  };
+  if (rooms && guests) {
+    element.textContent = `${rooms} ${ROOM_TEXT} для ${guests} ${GUEST_TEXT}`;
+  } else {
+    element.style.display = `none`;
+  }
+};
 
-  const fillTextTime = (element, checkin, checkout) => {
-    if (checkin && checkout) {
-      element.textContent = `Заезд после ${checkin}, выезд до ${checkout}`;
-    } else {
-      element.style.display = `none`;
-    }
-  };
+const fillTextTime = (element, checkin, checkout) => {
+  if (checkin && checkout) {
+    element.textContent = `Заезд после ${checkin}, выезд до ${checkout}`;
+  } else {
+    element.style.display = `none`;
+  }
+};
 
-  const setFeatures = (parent, target, source) => {
-    if (source) {
-      parent.innerHTML = ``;
-      for (let i = 0; i < source.length; i++) {
-        for (let j = 0; j < target.length; j++) {
-          if (target[j].classList.contains(`popup__feature--${source[i]}`)) {
-            parent.appendChild(target[j]);
-          }
+const setFeatures = (parent, target, source) => {
+  if (source) {
+    parent.innerHTML = ``;
+    for (let i = 0; i < source.length; i++) {
+      for (let j = 0; j < target.length; j++) {
+        if (target[j].classList.contains(`popup__feature--${source[i]}`)) {
+          parent.appendChild(target[j]);
         }
       }
-    } else {
-      parent.style.display = `none`;
     }
-  };
+  } else {
+    parent.style.display = `none`;
+  }
+};
 
-  const addPhotos = (target, element, source) => {
-    if (source) {
-      target.innerHTML = ``;
-      source.forEach((elem) => {
-        let newElement = element.cloneNode(true);
-        target.appendChild(newElement);
-        newElement.src = elem;
-      });
-    } else {
-      target.style.display = `none`;
-    }
-  };
+const addPhotos = (target, element, source) => {
+  if (source) {
+    target.innerHTML = ``;
+    source.forEach((elem) => {
+      let newElement = element.cloneNode(true);
+      target.appendChild(newElement);
+      newElement.src = elem;
+    });
+  } else {
+    target.style.display = `none`;
+  }
+};
 
-  window.renderCard = (pin) => {
-    const FRAGMENT = document.createDocumentFragment();
-    const ELEMENT_AFTER = document.querySelector(`.map__filters-container`);
-    const CARD_ELEMENT = CARD_TEMPLATE.cloneNode(true);
-    const FEATURES_LIST = CARD_ELEMENT.querySelector(`.popup__features`);
-    const FEATURE_ITEMS = CARD_ELEMENT.querySelectorAll(`.popup__feature`);
-    const PHOTOS_LIST = CARD_ELEMENT.querySelector(`.popup__photos`);
-    const PHOTO_ITEM = CARD_ELEMENT.querySelector(`.popup__photo`);
+window.renderCard = (pin) => {
+  const FRAGMENT = document.createDocumentFragment();
+  const ELEMENT_AFTER = document.querySelector(`.map__filters-container`);
+  const CARD_ELEMENT = CARD_TEMPLATE.cloneNode(true);
+  const FEATURES_LIST = CARD_ELEMENT.querySelector(`.popup__features`);
+  const FEATURE_ITEMS = CARD_ELEMENT.querySelectorAll(`.popup__feature`);
+  const PHOTOS_LIST = CARD_ELEMENT.querySelector(`.popup__photos`);
+  const PHOTO_ITEM = CARD_ELEMENT.querySelector(`.popup__photo`);
 
-    fillSrcField(CARD_ELEMENT.querySelector(`.popup__avatar`), pin.author.avatar);
-    fillTextField(CARD_ELEMENT.querySelector(`.popup__title`), pin.offer.title);
-    fillTextField(CARD_ELEMENT.querySelector(`.popup__text--address`), pin.offer.address);
-    fillTextField(CARD_ELEMENT.querySelector(`.popup__text--price`), pin.offer.price);
-    fillTextField(CARD_ELEMENT.querySelector(`.popup__type`), apartmentsType[pin.offer.type]);
-    fillTextCapacity(CARD_ELEMENT.querySelector(`.popup__text--capacity`), pin.offer.rooms, pin.offer.guests);
-    fillTextTime(CARD_ELEMENT.querySelector(`.popup__text--time`), pin.offer.checkin, pin.offer.checkout);
-    setFeatures(FEATURES_LIST, FEATURE_ITEMS, pin.offer.features);
-    fillTextField(CARD_ELEMENT.querySelector(`.popup__description`), pin.offer.description);
-    addPhotos(PHOTOS_LIST, PHOTO_ITEM, pin.offer.photos);
+  fillSrcField(CARD_ELEMENT.querySelector(`.popup__avatar`), pin.author.avatar);
+  fillTextField(CARD_ELEMENT.querySelector(`.popup__title`), pin.offer.title);
+  fillTextField(CARD_ELEMENT.querySelector(`.popup__text--address`), pin.offer.address);
+  fillTextField(CARD_ELEMENT.querySelector(`.popup__text--price`), pin.offer.price);
+  fillTextField(CARD_ELEMENT.querySelector(`.popup__type`), apartmentsType[pin.offer.type]);
+  fillTextCapacity(CARD_ELEMENT.querySelector(`.popup__text--capacity`), pin.offer.rooms, pin.offer.guests);
+  fillTextTime(CARD_ELEMENT.querySelector(`.popup__text--time`), pin.offer.checkin, pin.offer.checkout);
+  setFeatures(FEATURES_LIST, FEATURE_ITEMS, pin.offer.features);
+  fillTextField(CARD_ELEMENT.querySelector(`.popup__description`), pin.offer.description);
+  addPhotos(PHOTOS_LIST, PHOTO_ITEM, pin.offer.photos);
 
-    FRAGMENT.appendChild(CARD_ELEMENT);
-    MAP.insertBefore(FRAGMENT, ELEMENT_AFTER);
-  };
-})();
+  FRAGMENT.appendChild(CARD_ELEMENT);
+  MAP.insertBefore(FRAGMENT, ELEMENT_AFTER);
+};
