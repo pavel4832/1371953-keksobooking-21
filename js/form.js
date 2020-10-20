@@ -12,6 +12,8 @@
     .content
     .querySelector(`.error`);
   const NOTICE_FORM = document.querySelector(`.ad-form`);
+  const AVATAR_FIELD = NOTICE_FORM.querySelector(`#avatar`);
+  const AVATAR_IMAGE = NOTICE_FORM.querySelector(`.ad-form-header__preview img`);
   const ADDRESS_FIELD = NOTICE_FORM.querySelector(`#address`);
   const TYPE_FIELD = NOTICE_FORM.querySelector(`#type`);
   const PRICE_FIELD = NOTICE_FORM.querySelector(`#price`);
@@ -19,6 +21,8 @@
   const TIME_OUT_FIELD = NOTICE_FORM.querySelector(`#timeout`);
   const ROOM_FIELD = NOTICE_FORM.querySelector(`#room_number`);
   const GUEST_FIELD = NOTICE_FORM.querySelector(`#capacity`);
+  const IMAGES_FIELD = NOTICE_FORM.querySelector(`#images`);
+  const IMAGE_PLACE = NOTICE_FORM.querySelector(`.ad-form__photo`);
   const minApartmentsPrice = {
     palace: `10000`,
     flat: `1000`,
@@ -133,7 +137,32 @@
     document.addEventListener(`click`, onPopupOutsideClick);
   };
 
+  const setImage = function (evt, target) {
+    const FILE = evt.target.files[0];
+    const READER = new FileReader();
+    target.src = ``;
+
+    READER.addEventListener(`load`, function (evt) {
+      target.src = evt.target.result;
+    });
+    READER.readAsDataURL(FILE);
+  };
+
+  const getNewImage = function (evt) {
+    let file = document.createElement(`img`);
+    file.setAttribute(`height`, `100%`);
+    file.setAttribute(`width`, `100%`);
+    file.setAttribute(`alt`, `Фотография жилья`);
+    file.style.borderRadius = `5px`;
+    setImage(evt, file);
+    return file;
+  };
+
   activateForm();
+
+  AVATAR_FIELD.addEventListener(`change`, function (evt) {
+    setImage(evt, AVATAR_IMAGE);
+  });
 
   TYPE_FIELD.addEventListener(`change`, function () {
     checkValidType();
@@ -153,6 +182,11 @@
 
   ROOM_FIELD.addEventListener(`change`, function () {
     checkValidGuest();
+  });
+
+  IMAGES_FIELD.addEventListener(`change`, function (evt) {
+    IMAGE_PLACE.innerHTML = ``;
+    IMAGE_PLACE.appendChild(getNewImage(evt));
   });
 
   NOTICE_FORM.addEventListener(`submit`, function (evt) {
