@@ -12,7 +12,7 @@ module.exports = {
     `./js/debounce.js`,
     `./js/filter.js`,
     `./js/page.js`,
-    `.js/main.js`
+    `./js/main.js`
   ],
   output: {
     filename: `bundle.js`,
