@@ -16,31 +16,31 @@
   };
   window.pins = [];
 
-  const disableFormFields = function (fields) {
-    for (let i = 0; i < fields.length; i++) {
-      fields[i].setAttribute(`disabled`, `disabled`);
-    }
+  const disableFormFields = (fields) => {
+    fields.forEach((element) => {
+      element.setAttribute(`disabled`, `disabled`);
+    });
   };
 
-  const enableFormFields = function (fields) {
-    for (let i = 0; i < fields.length; i++) {
-      fields[i].removeAttribute(`disabled`);
-    }
+  const enableFormFields = (fields) => {
+    fields.forEach((element) => {
+      element.removeAttribute(`disabled`);
+    });
   };
 
-  const onMouseLeftPress = function (evt) {
+  const onMouseLeftPress = (evt) => {
     if (evt.button === 0) {
       activatePage();
     }
   };
 
-  const onEnterPress = function (evt) {
-    window.util.isEnterEvent(evt, function () {
+  const onEnterPress = (evt) => {
+    window.util.isEnterEvent(evt, () => {
       activatePage();
     });
   };
 
-  const onDataLoadError = function (errorMessage) {
+  const onDataLoadError = (errorMessage) => {
     const node = document.createElement(`div`);
     node.style = `z-index: 100; margin: 0 auto; text-align: center; background-color: red;`;
     node.style.position = `absolute`;
@@ -52,18 +52,18 @@
     document.body.insertAdjacentElement(`afterbegin`, node);
   };
 
-  const onDataLoadSuccess = function (data) {
+  const onDataLoadSuccess = (data) => {
     window.pins = data;
     window.pin.renderPins(data);
     enableFormFields(FILTER_FIELDS);
   };
 
-  const onResetPress = function () {
+  const onResetPress = () => {
     window.deactivatePage();
     RESET_BUTTON.removeEventListener(`click`, onResetPress);
   };
 
-  const activatePage = function () {
+  const activatePage = () => {
     enableFormFields(FORM_FIELDS);
     MAP.classList.remove(`map--faded`);
     NOTICE_FORM.classList.remove(`ad-form--disabled`);
@@ -74,7 +74,7 @@
     RESET_BUTTON.addEventListener(`click`, onResetPress);
   };
 
-  window.deactivatePage = function () {
+  window.deactivatePage = () => {
     NOTICE_FORM.reset();
     disableFormFields(ALL_FIELDS);
     window.fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.OFFSET_X);

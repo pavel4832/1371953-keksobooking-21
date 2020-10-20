@@ -12,7 +12,7 @@
     bungalow: `Бунгало`
   };
 
-  const getRoomText = function (rooms) {
+  const getRoomText = (rooms) => {
     let room;
 
     if (rooms === 1) {
@@ -25,7 +25,7 @@
     return room;
   };
 
-  const getGuestText = function (guests) {
+  const getGuestText = (guests) => {
     let guest;
 
     if (guests === 1) {
@@ -36,7 +36,7 @@
     return guest;
   };
 
-  const fillSrcField = function (element, src) {
+  const fillSrcField = (element, src) => {
     if (src) {
       element.src = src;
     } else {
@@ -44,7 +44,7 @@
     }
   };
 
-  const fillTextField = function (element, text) {
+  const fillTextField = (element, text) => {
     if (text) {
       element.textContent = text;
     } else {
@@ -52,7 +52,7 @@
     }
   };
 
-  const fillTextCapacity = function (element, rooms, guests) {
+  const fillTextCapacity = (element, rooms, guests) => {
     const ROOM_TEXT = getRoomText(rooms);
     const GUEST_TEXT = getGuestText(guests);
 
@@ -63,7 +63,7 @@
     }
   };
 
-  const fillTextTime = function (element, checkin, checkout) {
+  const fillTextTime = (element, checkin, checkout) => {
     if (checkin && checkout) {
       element.textContent = `Заезд после ${checkin}, выезд до ${checkout}`;
     } else {
@@ -71,7 +71,7 @@
     }
   };
 
-  const setFeatures = function (parent, target, source) {
+  const setFeatures = (parent, target, source) => {
     if (source) {
       parent.innerHTML = ``;
       for (let i = 0; i < source.length; i++) {
@@ -86,20 +86,20 @@
     }
   };
 
-  const addPhotos = function (target, element, source) {
+  const addPhotos = (target, element, source) => {
     if (source) {
       target.innerHTML = ``;
-      for (let i = 0; i < source.length; i++) {
+      source.forEach((elem) => {
         let newElement = element.cloneNode(true);
         target.appendChild(newElement);
-        newElement.src = source[i];
-      }
+        newElement.src = elem;
+      });
     } else {
       target.style.display = `none`;
     }
   };
 
-  window.renderCard = function (pin) {
+  window.renderCard = (pin) => {
     const FRAGMENT = document.createDocumentFragment();
     const ELEMENT_AFTER = document.querySelector(`.map__filters-container`);
     const CARD_ELEMENT = CARD_TEMPLATE.cloneNode(true);

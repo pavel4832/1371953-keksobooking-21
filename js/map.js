@@ -3,7 +3,7 @@
 (function () {
   const MAP = document.querySelector(`.map`);
 
-  const onCardEscPress = function (evt) {
+  const onCardEscPress = (evt) => {
     if (evt.key === `Escape`) {
       evt.preventDefault();
       window.map.closeCard();
@@ -11,14 +11,14 @@
   };
 
   window.map = {
-    closeCard: function () {
+    closeCard: () => {
       const ELEMENT = MAP.querySelector(`.map__card`);
       if (ELEMENT) {
         MAP.removeChild(ELEMENT);
         document.removeEventListener(`keydown`, onCardEscPress);
       }
     },
-    showCard: function (element) {
+    showCard: (element) => {
       let CARD = MAP.querySelector(`.map__card`);
 
       if (CARD) {
@@ -31,11 +31,11 @@
 
       document.addEventListener(`keydown`, onCardEscPress);
 
-      CARD.querySelector(`.popup__close`).addEventListener(`click`, function () {
+      CARD.querySelector(`.popup__close`).addEventListener(`click`, () => {
         window.map.closeCard();
       });
 
-      CARD.querySelector(`.popup__close`).addEventListener(`keydown`, function (evt) {
+      CARD.querySelector(`.popup__close`).addEventListener(`keydown`, (evt) => {
         if (evt.key === `Enter`) {
           window.map.closeCard();
         }

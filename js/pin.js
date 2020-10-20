@@ -9,7 +9,7 @@
   const OFFSET_X = 25;
   const OFFSET_Y = 70;
 
-  const disablePin = function () {
+  const disablePin = () => {
     const PIN = document.querySelector(`.map__pin--active`);
 
     if (PIN) {
@@ -18,7 +18,7 @@
   };
 
   window.pin = {
-    renderPins: function (pins) {
+    renderPins: (pins) => {
       const FRAGMENT = document.createDocumentFragment();
       let pinQuantity = pins.length > MAX_PIN_QUANTITY ? MAX_PIN_QUANTITY : pins.length;
 
@@ -28,7 +28,7 @@
         PIN_ELEMENT.querySelector(`img`).src = pins[i].author.avatar;
         PIN_ELEMENT.querySelector(`img`).alt = pins[i].offer.title;
         FRAGMENT.appendChild(PIN_ELEMENT);
-        PIN_ELEMENT.addEventListener(`click`, function () {
+        PIN_ELEMENT.addEventListener(`click`, () => {
           disablePin();
           PIN_ELEMENT.classList.add(`map__pin--active`);
           window.map.showCard(pins[i]);
@@ -37,12 +37,12 @@
 
       MAP_PINS.appendChild(FRAGMENT);
     },
-    removePins: function () {
+    removePins: () => {
       const PINS = document.querySelectorAll(`.map__pin:not(.map__pin--main)`);
 
-      for (let i = 0; i < PINS.length; i++) {
-        MAP_PINS.removeChild(PINS[i]);
-      }
+      PINS.forEach((element) => {
+        MAP_PINS.removeChild(element);
+      });
     }
   };
 })();

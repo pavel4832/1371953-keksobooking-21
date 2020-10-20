@@ -6,7 +6,7 @@
   window.deactivatePage();
   window.scrollTo(0, 0);
 
-  FILTER.addEventListener(`change`, function () {
+  FILTER.addEventListener(`change`, () => {
     window.filterPins(window.pins);
   });
 })();

@@ -6,21 +6,21 @@
   };
   const TIMEOUT_IN_MS = 10000;
 
-  window.load = function (url, method, onSuccess, onError, data) {
+  window.load = (url, method, onSuccess, onError, data) => {
     const XHR = new XMLHttpRequest();
     XHR.responseType = `json`;
 
-    XHR.addEventListener(`load`, function () {
+    XHR.addEventListener(`load`, () => {
       if (XHR.status === StatusCode.OK) {
         onSuccess(XHR.response);
       } else {
         onError(`Статус ответа: ${XHR.status} ${XHR.statusText}`);
       }
     });
-    XHR.addEventListener(`error`, function () {
+    XHR.addEventListener(`error`, () => {
       onError(`Произошла ошибка соединения`);
     });
-    XHR.addEventListener(`timeout`, function () {
+    XHR.addEventListener(`timeout`, () => {
       onError(`Запрос не успел выполниться за ${XHR.timeout}мс`);
     });
 

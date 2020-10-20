@@ -30,13 +30,13 @@
     bungalow: `0`
   };
 
-  window.fillAddressField = function (offsetX, offsetY) {
+  window.fillAddressField = (offsetX, offsetY) => {
     let xLocation = parseInt(MAP_PIN_MAIN.style.left, 10) + offsetX;
     let yLocation = parseInt(MAP_PIN_MAIN.style.top, 10) + offsetY;
     ADDRESS_FIELD.value = `${xLocation}, ${yLocation}`;
   };
 
-  const checkValidType = function () {
+  const checkValidType = () => {
     let type = TYPE_FIELD.value;
     let minPrice = minApartmentsPrice[type];
 
@@ -44,7 +44,7 @@
     PRICE_FIELD.setAttribute(`min`, minPrice);
   };
 
-  const checkValidGuest = function () {
+  const checkValidGuest = () => {
     let roomNumber = ROOM_FIELD.value;
     let guestNumber = GUEST_FIELD.value;
 
@@ -60,40 +60,40 @@
     GUEST_FIELD.reportValidity();
   };
 
-  const checkValidTime = function (timeSource, timeChange) {
+  const checkValidTime = (timeSource, timeChange) => {
     const time = timeChange.options;
 
-    for (let i = 0; i < time.length; i++) {
-      time[i].removeAttribute(`selected`);
-    }
+    time.forEach((element) => {
+      element.removeAttribute(`selected`);
+    });
 
     time[timeSource.selectedIndex].setAttribute(`selected`, `selected`);
   };
 
-  const activateForm = function () {
+  const activateForm = () => {
     checkValidType();
     checkValidGuest();
   };
 
-  const getTargetElement = function () {
+  const getTargetElement = () => {
     const error = PAGE.querySelector(`.error`);
     const success = PAGE.querySelector(`.success`);
     return error ? error : success;
   };
 
-  const onPopupEscPress = function (evt) {
-    window.util.isEscEvent(evt, function () {
+  const onPopupEscPress = (evt) => {
+    window.util.isEscEvent(evt, () => {
       closePopup();
     });
   };
 
-  const onEnterPress = function (evt) {
-    window.util.isEnterEvent(evt, function () {
+  const onEnterPress = (evt) => {
+    window.util.isEnterEvent(evt, () => {
       closePopup();
     });
   };
 
-  const onPopupOutsideClick = function (evt) {
+  const onPopupOutsideClick = (evt) => {
     const ELEMENT = getTargetElement();
 
     evt.preventDefault();
@@ -103,7 +103,7 @@
     }
   };
 
-  const closePopup = function () {
+  const closePopup = () => {
     const ELEMENT = getTargetElement();
 
     PAGE.removeChild(ELEMENT);
@@ -111,7 +111,7 @@
     document.removeEventListener(`click`, onPopupOutsideClick);
   };
 
-  const onDataLoadSuccess = function () {
+  const onDataLoadSuccess = () => {
     const FRAGMENT = document.createDocumentFragment();
     const SUCCESS_MESSAGE = SUCCESS_MESSAGE_TEMPLATE.cloneNode(true);
 
@@ -123,7 +123,7 @@
     window.deactivatePage();
   };
 
-  const onDataLoadError = function () {
+  const onDataLoadError = () => {
     const FRAGMENT = document.createDocumentFragment();
     const ERROR_MESSAGE = ERROR_MESSAGE_TEMPLATE.cloneNode(true);
     const TRY_AGAIN_BUTTON = ERROR_MESSAGE.querySelector(`.error__button`);
@@ -137,18 +137,18 @@
     document.addEventListener(`click`, onPopupOutsideClick);
   };
 
-  const setImage = function (evt, target) {
+  const setImage = (evt, target) => {
     const FILE = evt.target.files[0];
     const READER = new FileReader();
     target.src = ``;
 
-    READER.addEventListener(`load`, function (evt) {
-      target.src = evt.target.result;
+    READER.addEventListener(`load`, (event) => {
+      target.src = event.target.result;
     });
     READER.readAsDataURL(FILE);
   };
 
-  const getNewImage = function (evt) {
+  const getNewImage = (evt) => {
     let file = document.createElement(`img`);
     file.setAttribute(`height`, `100%`);
     file.setAttribute(`width`, `100%`);
@@ -160,36 +160,36 @@
 
   activateForm();
 
-  AVATAR_FIELD.addEventListener(`change`, function (evt) {
+  AVATAR_FIELD.addEventListener(`change`, (evt) => {
     setImage(evt, AVATAR_IMAGE);
   });
 
-  TYPE_FIELD.addEventListener(`change`, function () {
+  TYPE_FIELD.addEventListener(`change`, () => {
     checkValidType();
   });
 
-  TIME_IN_FIELD.addEventListener(`change`, function () {
+  TIME_IN_FIELD.addEventListener(`change`, () => {
     checkValidTime(TIME_IN_FIELD, TIME_OUT_FIELD);
   });
 
-  TIME_OUT_FIELD.addEventListener(`change`, function () {
+  TIME_OUT_FIELD.addEventListener(`change`, () => {
     checkValidTime(TIME_OUT_FIELD, TIME_IN_FIELD);
   });
 
-  GUEST_FIELD.addEventListener(`change`, function () {
+  GUEST_FIELD.addEventListener(`change`, () => {
     checkValidGuest();
   });
 
-  ROOM_FIELD.addEventListener(`change`, function () {
+  ROOM_FIELD.addEventListener(`change`, () => {
     checkValidGuest();
   });
 
-  IMAGES_FIELD.addEventListener(`change`, function (evt) {
+  IMAGES_FIELD.addEventListener(`change`, (evt) => {
     IMAGE_PLACE.innerHTML = ``;
     IMAGE_PLACE.appendChild(getNewImage(evt));
   });
 
-  NOTICE_FORM.addEventListener(`submit`, function (evt) {
+  NOTICE_FORM.addEventListener(`submit`, (evt) => {
     evt.preventDefault();
 
     window.load(UPLOAD_URL, `POST`, onDataLoadSuccess, onDataLoadError, new FormData(NOTICE_FORM));

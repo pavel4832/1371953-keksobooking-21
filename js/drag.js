@@ -14,7 +14,7 @@
   const MIN_Y_POSITION = 130 - MainPinDimensions.HEIGHT;
   const MAX_Y_POSITION = 630 - MainPinDimensions.HEIGHT;
 
-  const dragMainPin = function (evt) {
+  const dragMainPin = (evt) => {
     evt.preventDefault();
 
     let startCoords = {
@@ -22,7 +22,7 @@
       y: evt.clientY
     };
 
-    const checkValidPosition = function (coords) {
+    const checkValidPosition = (coords) => {
       if (coords.x <= MIN_X_POSITION) {
         coords.x = MIN_X_POSITION;
       }
@@ -37,7 +37,7 @@
       }
     };
 
-    const getNewCoords = function (moveEvt) {
+    const getNewCoords = (moveEvt) => {
       let shift = {
         x: startCoords.x - moveEvt.clientX,
         y: startCoords.y - moveEvt.clientY
@@ -59,12 +59,12 @@
       window.fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.HEIGHT);
     };
 
-    const onMouseMove = function (moveEvt) {
+    const onMouseMove = (moveEvt) => {
       moveEvt.preventDefault();
       getNewCoords(moveEvt);
     };
 
-    const onMouseUp = function (upEvt) {
+    const onMouseUp = (upEvt) => {
       upEvt.preventDefault();
 
       getNewCoords(upEvt);
@@ -76,7 +76,7 @@
     document.addEventListener(`mouseup`, onMouseUp);
   };
 
-  MAP_PIN_MAIN.addEventListener(`mousedown`, function (evt) {
+  MAP_PIN_MAIN.addEventListener(`mousedown`, (evt) => {
     dragMainPin(evt);
   });
 })();

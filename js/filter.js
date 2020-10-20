@@ -8,7 +8,7 @@
   const GUESTS_FIELD = FILTER.querySelector(`#housing-guests`);
   const FEATURES_LIST = FILTER.querySelectorAll(`#housing-features input`);
 
-  const filterByField = function (pin, value) {
+  const filterByField = (pin, value) => {
     if (value === `any`) {
       return true;
     } else {
@@ -16,7 +16,7 @@
     }
   };
 
-  const filterByPrice = function (pin, value) {
+  const filterByPrice = (pin, value) => {
     let price;
     if (value === `any`) {
       return true;
@@ -32,34 +32,35 @@
     }
   };
 
-  const getFeatures = function () {
+  const getFeatures = () => {
     let features = [];
-    for (let i = 0; i < FEATURES_LIST.length; i++) {
-      if (FEATURES_LIST[i].checked) {
-        features.push(FEATURES_LIST[i].value);
+    FEATURES_LIST.forEach((element) => {
+      if (element.checked) {
+        features.push(element.value);
       }
-    }
+    });
+
     return features;
   };
 
-  const filterByFeatures = function (element, features) {
-    return features.every(function (feature) {
+  const filterByFeatures = (element, features) => {
+    return features.every((feature) => {
       return element.offer.features.indexOf(feature) !== -1;
     });
   };
 
-  const filter = function (pins) {
+  const filter = (pins) => {
     let houseType = TYPE_FIELD.value;
     let housePrice = PRICE_FIELD.value;
     let houseRooms = ROOMS_FIELD.value;
     let houseGuests = GUESTS_FIELD.value;
     let features = getFeatures();
-    return pins.filter(function (element) {
+    return pins.filter((element) => {
       return filterByField(element.offer.type, houseType) && filterByPrice(element.offer.price, housePrice) && filterByField(element.offer.rooms, houseRooms) && filterByField(element.offer.guests, houseGuests) && filterByFeatures(element, features);
     });
   };
 
-  window.filterPins = window.debounce(function (pins) {
+  window.filterPins = window.debounce((pins) => {
     window.pin.removePins();
     window.map.closeCard();
 
