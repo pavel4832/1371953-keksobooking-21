@@ -8,6 +8,8 @@ const ALL_FIELDS = document.querySelectorAll(`.ad-form fieldset, .map__filters s
 const FORM_FIELDS = document.querySelectorAll(`.ad-form fieldset`);
 const FILTER_FIELDS = document.querySelectorAll(`.map__filters select, .map__filters fieldset`);
 const RESET_BUTTON = document.querySelector(`.ad-form__reset`);
+const AVATAR_IMAGE = NOTICE_FORM.querySelector(`.ad-form-header__preview img`);
+const IMAGE_PLACE = NOTICE_FORM.querySelector(`.ad-form__photo`);
 const MainPinDimensions = {
   WIDTH: 62,
   HEIGHT: 84,
@@ -75,6 +77,8 @@ const activatePage = () => {
 
 window.deactivatePage = () => {
   NOTICE_FORM.reset();
+  AVATAR_IMAGE.src = `img/muffin-grey.svg`;
+  IMAGE_PLACE.innerHTML = ``;
   disableFormFields(ALL_FIELDS);
   window.fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.OFFSET_X);
   MAP.classList.add(`map--faded`);
