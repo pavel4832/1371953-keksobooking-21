@@ -10,6 +10,7 @@ const SUCCESS_MESSAGE_TEMPLATE = document.querySelector(`#success`)
 const ERROR_MESSAGE_TEMPLATE = document.querySelector(`#error`)
   .content
   .querySelector(`.error`);
+const FILE_TYPES = [`gif`, `jpg`, `jpeg`, `png`];
 const NOTICE_FORM = document.querySelector(`.ad-form`);
 const AVATAR_FIELD = NOTICE_FORM.querySelector(`#avatar`);
 const AVATAR_IMAGE = NOTICE_FORM.querySelector(`.ad-form-header__preview img`);
@@ -138,13 +139,21 @@ const onDataLoadError = () => {
 
 const setImage = (evt, target) => {
   const FILE = evt.target.files[0];
-  const READER = new FileReader();
-  target.src = ``;
-
-  READER.addEventListener(`load`, (event) => {
-    target.src = event.target.result;
+  const FILE_NAME = FILE.name.toLowerCase();
+  const MATCHES = FILE_TYPES.some((it) => {
+    return FILE_NAME.endsWith(it);
   });
-  READER.readAsDataURL(FILE);
+
+  if (MATCHES) {
+    const READER = new FileReader();
+    target.src = ``;
+
+    READER.addEventListener(`load`, (event) => {
+      target.src = event.target.result;
+    });
+
+    READER.readAsDataURL(FILE);
+  }
 };
 
 const getNewImage = (evt) => {
