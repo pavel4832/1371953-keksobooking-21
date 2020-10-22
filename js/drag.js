@@ -1,17 +1,17 @@
 'use strict';
 
-const MAP = document.querySelector(`.map`);
-const MAP_PINS = document.querySelector(`.map__pins`);
-const MAP_PIN_MAIN = MAP.querySelector(`.map__pin--main`);
+const map = document.querySelector(`.map`);
+const mapPins = document.querySelector(`.map__pins`);
+const mapPinMain = map.querySelector(`.map__pin--main`);
 const MainPinDimensions = {
   WIDTH: 62,
   HEIGHT: 84,
   OFFSET_X: 31
 };
-const MIN_X_POSITION = 0 - (MainPinDimensions.WIDTH / 2);
-const MAX_X_POSITION = MAP_PINS.clientWidth - (MainPinDimensions.WIDTH / 2);
-const MIN_Y_POSITION = 130 - MainPinDimensions.HEIGHT;
-const MAX_Y_POSITION = 630 - MainPinDimensions.HEIGHT;
+const minXPosition = 0 - (MainPinDimensions.WIDTH / 2);
+const maxXPosition = mapPins.clientWidth - (MainPinDimensions.WIDTH / 2);
+const minYPosition = 130 - MainPinDimensions.HEIGHT;
+const maxYPosition = 630 - MainPinDimensions.HEIGHT;
 
 const dragMainPin = (evt) => {
   evt.preventDefault();
@@ -22,17 +22,17 @@ const dragMainPin = (evt) => {
   };
 
   const checkValidPosition = (coords) => {
-    if (coords.x <= MIN_X_POSITION) {
-      coords.x = MIN_X_POSITION;
+    if (coords.x <= minXPosition) {
+      coords.x = minXPosition;
     }
-    if (coords.x >= MAX_X_POSITION) {
-      coords.x = MAX_X_POSITION;
+    if (coords.x >= maxXPosition) {
+      coords.x = maxXPosition;
     }
-    if (coords.y <= MIN_Y_POSITION) {
-      coords.y = MIN_Y_POSITION;
+    if (coords.y <= minYPosition) {
+      coords.y = minYPosition;
     }
-    if (coords.y >= MAX_Y_POSITION) {
-      coords.y = MAX_Y_POSITION;
+    if (coords.y >= maxYPosition) {
+      coords.y = maxYPosition;
     }
   };
 
@@ -43,8 +43,8 @@ const dragMainPin = (evt) => {
     };
 
     let newCoords = {
-      x: MAP_PIN_MAIN.offsetLeft - shift.x,
-      y: MAP_PIN_MAIN.offsetTop - shift.y
+      x: mapPinMain.offsetLeft - shift.x,
+      y: mapPinMain.offsetTop - shift.y
     };
 
     startCoords = {
@@ -53,8 +53,8 @@ const dragMainPin = (evt) => {
     };
 
     checkValidPosition(newCoords);
-    MAP_PIN_MAIN.style.top = (newCoords.y) + `px`;
-    MAP_PIN_MAIN.style.left = (newCoords.x) + `px`;
+    mapPinMain.style.top = (newCoords.y) + `px`;
+    mapPinMain.style.left = (newCoords.x) + `px`;
     window.fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.HEIGHT);
   };
 
@@ -75,6 +75,6 @@ const dragMainPin = (evt) => {
   document.addEventListener(`mouseup`, onMouseUp);
 };
 
-MAP_PIN_MAIN.addEventListener(`mousedown`, (evt) => {
+mapPinMain.addEventListener(`mousedown`, (evt) => {
   dragMainPin(evt);
 });

@@ -1,15 +1,16 @@
 'use strict';
 
 const LOAD_URL = `https://21.javascript.pages.academy/keksobooking/data`;
-const MAP = document.querySelector(`.map`);
-const MAP_PIN_MAIN = MAP.querySelector(`.map__pin--main`);
-const NOTICE_FORM = document.querySelector(`.ad-form`);
-const ALL_FIELDS = document.querySelectorAll(`.ad-form fieldset, .map__filters select, .map__filters fieldset`);
-const FORM_FIELDS = document.querySelectorAll(`.ad-form fieldset`);
-const FILTER_FIELDS = document.querySelectorAll(`.map__filters select, .map__filters fieldset`);
-const RESET_BUTTON = document.querySelector(`.ad-form__reset`);
-const AVATAR_IMAGE = NOTICE_FORM.querySelector(`.ad-form-header__preview img`);
-const IMAGE_PLACE = NOTICE_FORM.querySelector(`.ad-form__photo`);
+const map = document.querySelector(`.map`);
+const mapPinMain = map.querySelector(`.map__pin--main`);
+const noticeForm = document.querySelector(`.ad-form`);
+const allFields = document.querySelectorAll(`.ad-form fieldset, .map__filters select, .map__filters fieldset`);
+const formFields = document.querySelectorAll(`.ad-form fieldset`);
+const filterFields = document.querySelectorAll(`.map__filters select, .map__filters fieldset`);
+const addressField = noticeForm.querySelector(`#address`);
+const resetButton = document.querySelector(`.ad-form__reset`);
+const avatarImage = noticeForm.querySelector(`.ad-form-header__preview img`);
+const imagePlace = noticeForm.querySelector(`.ad-form__photo`);
 const MainPinDimensions = {
   WIDTH: 62,
   HEIGHT: 84,
@@ -56,35 +57,36 @@ const onDataLoadError = (errorMessage) => {
 const onDataLoadSuccess = (data) => {
   window.pins = data;
   window.pin.renderPins(data);
-  enableFormFields(FILTER_FIELDS);
+  enableFormFields(filterFields);
 };
 
 const onResetPress = () => {
   window.deactivatePage();
-  RESET_BUTTON.removeEventListener(`click`, onResetPress);
+  resetButton.removeEventListener(`click`, onResetPress);
 };
 
 const activatePage = () => {
-  enableFormFields(FORM_FIELDS);
-  MAP.classList.remove(`map--faded`);
-  NOTICE_FORM.classList.remove(`ad-form--disabled`);
+  enableFormFields(formFields);
+  addressField.setAttribute(`disabled`, `disabled`);
+  map.classList.remove(`map--faded`);
+  noticeForm.classList.remove(`ad-form--disabled`);
   window.fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.HEIGHT);
   window.load(LOAD_URL, `GET`, onDataLoadSuccess, onDataLoadError);
-  MAP_PIN_MAIN.removeEventListener(`mousedown`, onMouseLeftPress);
-  MAP_PIN_MAIN.removeEventListener(`keydown`, onEnterPress);
-  RESET_BUTTON.addEventListener(`click`, onResetPress);
+  mapPinMain.removeEventListener(`mousedown`, onMouseLeftPress);
+  mapPinMain.removeEventListener(`keydown`, onEnterPress);
+  resetButton.addEventListener(`click`, onResetPress);
 };
 
 window.deactivatePage = () => {
-  NOTICE_FORM.reset();
-  AVATAR_IMAGE.src = `img/muffin-grey.svg`;
-  IMAGE_PLACE.innerHTML = ``;
-  disableFormFields(ALL_FIELDS);
+  noticeForm.reset();
+  avatarImage.src = `img/muffin-grey.svg`;
+  imagePlace.innerHTML = ``;
+  disableFormFields(allFields);
   window.fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.OFFSET_X);
-  MAP.classList.add(`map--faded`);
-  NOTICE_FORM.classList.add(`ad-form--disabled`);
-  MAP_PIN_MAIN.addEventListener(`mousedown`, onMouseLeftPress);
-  MAP_PIN_MAIN.addEventListener(`keydown`, onEnterPress);
+  map.classList.add(`map--faded`);
+  noticeForm.classList.add(`ad-form--disabled`);
+  mapPinMain.addEventListener(`mousedown`, onMouseLeftPress);
+  mapPinMain.addEventListener(`keydown`, onEnterPress);
   window.pin.removePins();
   window.map.closeCard();
 };

@@ -1,6 +1,6 @@
 'use strict';
 
-const MAP = document.querySelector(`.map`);
+const map = document.querySelector(`.map`);
 
 const onCardEscPress = (evt) => {
   if (evt.key === `Escape`) {
@@ -11,30 +11,30 @@ const onCardEscPress = (evt) => {
 
 window.map = {
   closeCard: () => {
-    const ELEMENT = MAP.querySelector(`.map__card`);
+    const ELEMENT = map.querySelector(`.map__card`);
     if (ELEMENT) {
-      MAP.removeChild(ELEMENT);
+      map.removeChild(ELEMENT);
       document.removeEventListener(`keydown`, onCardEscPress);
     }
   },
   showCard: (element) => {
-    let CARD = MAP.querySelector(`.map__card`);
+    let card = map.querySelector(`.map__card`);
 
-    if (CARD) {
-      MAP.removeChild(CARD);
+    if (card) {
+      map.removeChild(card);
     }
 
     window.renderCard(element);
 
-    CARD = MAP.querySelector(`.map__card`);
+    card = map.querySelector(`.map__card`);
 
     document.addEventListener(`keydown`, onCardEscPress);
 
-    CARD.querySelector(`.popup__close`).addEventListener(`click`, () => {
+    card.querySelector(`.popup__close`).addEventListener(`click`, () => {
       window.map.closeCard();
     });
 
-    CARD.querySelector(`.popup__close`).addEventListener(`keydown`, (evt) => {
+    card.querySelector(`.popup__close`).addEventListener(`keydown`, (evt) => {
       if (evt.key === `Enter`) {
         window.map.closeCard();
       }

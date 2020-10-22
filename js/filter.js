@@ -1,11 +1,13 @@
 'use strict';
 
-const FILTER = document.querySelector(`.map__filters`);
-const TYPE_FIELD = FILTER.querySelector(`#housing-type`);
-const PRICE_FIELD = FILTER.querySelector(`#housing-price`);
-const ROOMS_FIELD = FILTER.querySelector(`#housing-rooms`);
-const GUESTS_FIELD = FILTER.querySelector(`#housing-guests`);
-const FEATURES_LIST = FILTER.querySelectorAll(`#housing-features input`);
+const LOW_PRICE = 10000;
+const HIGH_PRICE = 50000;
+const filter = document.querySelector(`.map__filters`);
+const typeField = filter.querySelector(`#housing-type`);
+const priceField = filter.querySelector(`#housing-price`);
+const roomsField = filter.querySelector(`#housing-rooms`);
+const guestField = filter.querySelector(`#housing-guests`);
+const featuresList = filter.querySelectorAll(`#housing-features input`);
 
 const filterByField = (pin, value) => {
   if (value === `any`) {
@@ -20,9 +22,9 @@ const filterByPrice = (pin, value) => {
   if (value === `any`) {
     return true;
   } else {
-    if (pin < 10000) {
+    if (pin < LOW_PRICE) {
       price = `low`;
-    } else if (pin >= 10000 && pin <= 50000) {
+    } else if (pin >= LOW_PRICE && pin <= HIGH_PRICE) {
       price = `middle`;
     } else {
       price = `high`;
@@ -33,7 +35,7 @@ const filterByPrice = (pin, value) => {
 
 const getFeatures = () => {
   let features = [];
-  FEATURES_LIST.forEach((element) => {
+  featuresList.forEach((element) => {
     if (element.checked) {
       features.push(element.value);
     }
@@ -48,20 +50,24 @@ const filterByFeatures = (element, features) => {
   });
 };
 
-const filter = (pins) => {
-  let houseType = TYPE_FIELD.value;
-  let housePrice = PRICE_FIELD.value;
-  let houseRooms = ROOMS_FIELD.value;
-  let houseGuests = GUESTS_FIELD.value;
-  let features = getFeatures();
+const useFilter = (pins) => {
+  const houseType = typeField.value;
+  const housePrice = priceField.value;
+  const houseRooms = roomsField.value;
+  const houseGuests = guestField.value;
+  const features = getFeatures();
   return pins.filter((element) => {
     return filterByField(element.offer.type, houseType) && filterByPrice(element.offer.price, housePrice) && filterByField(element.offer.rooms, houseRooms) && filterByField(element.offer.guests, houseGuests) && filterByFeatures(element, features);
   });
 };
 
-window.filterPins = window.debounce((pins) => {
+const filterPins = window.debounce((pins) => {
   window.pin.removePins();
   window.map.closeCard();
 
-  window.pin.renderPins(filter(pins));
+  window.pin.renderPins(useFilter(pins));
+});
+
+filter.addEventListener(`change`, () => {
+  filterPins(window.pins);
 });

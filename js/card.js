@@ -1,7 +1,9 @@
 'use strict';
 
-const MAP = document.querySelector(`.map`);
-const CARD_TEMPLATE = document.querySelector(`#card`)
+const MIN_NUMBER = 1;
+const MAX_ROOMS_NUMBER = 5;
+const map = document.querySelector(`.map`);
+const cardTemplate = document.querySelector(`#card`)
   .content
   .querySelector(`.map__card`);
 const apartmentsType = {
@@ -14,9 +16,9 @@ const apartmentsType = {
 const getRoomText = (rooms) => {
   let room;
 
-  if (rooms === 1) {
+  if (rooms === MIN_NUMBER) {
     room = `комната`;
-  } else if (rooms === 5) {
+  } else if (rooms === MAX_ROOMS_NUMBER) {
     room = `комнат`;
   } else {
     room = `комнаты`;
@@ -27,7 +29,7 @@ const getRoomText = (rooms) => {
 const getGuestText = (guests) => {
   let guest;
 
-  if (guests === 1) {
+  if (guests === MIN_NUMBER) {
     guest = `гостя`;
   } else {
     guest = `гостей`;
@@ -52,11 +54,11 @@ const fillTextField = (element, text) => {
 };
 
 const fillTextCapacity = (element, rooms, guests) => {
-  const ROOM_TEXT = getRoomText(rooms);
-  const GUEST_TEXT = getGuestText(guests);
+  const roomText = getRoomText(rooms);
+  const guestText = getGuestText(guests);
 
   if (rooms && guests) {
-    element.textContent = `${rooms} ${ROOM_TEXT} для ${guests} ${GUEST_TEXT}`;
+    element.textContent = `${rooms} ${roomText} для ${guests} ${guestText}`;
   } else {
     element.style.display = `none`;
   }
@@ -99,25 +101,25 @@ const addPhotos = (target, element, source) => {
 };
 
 window.renderCard = (pin) => {
-  const FRAGMENT = document.createDocumentFragment();
-  const ELEMENT_AFTER = document.querySelector(`.map__filters-container`);
-  const CARD_ELEMENT = CARD_TEMPLATE.cloneNode(true);
-  const FEATURES_LIST = CARD_ELEMENT.querySelector(`.popup__features`);
-  const FEATURE_ITEMS = CARD_ELEMENT.querySelectorAll(`.popup__feature`);
-  const PHOTOS_LIST = CARD_ELEMENT.querySelector(`.popup__photos`);
-  const PHOTO_ITEM = CARD_ELEMENT.querySelector(`.popup__photo`);
+  const fragment = document.createDocumentFragment();
+  const elementAfter = document.querySelector(`.map__filters-container`);
+  const cardElement = cardTemplate.cloneNode(true);
+  const featuresList = cardElement.querySelector(`.popup__features`);
+  const featureItems = cardElement.querySelectorAll(`.popup__feature`);
+  const photosList = cardElement.querySelector(`.popup__photos`);
+  const photoItem = cardElement.querySelector(`.popup__photo`);
 
-  fillSrcField(CARD_ELEMENT.querySelector(`.popup__avatar`), pin.author.avatar);
-  fillTextField(CARD_ELEMENT.querySelector(`.popup__title`), pin.offer.title);
-  fillTextField(CARD_ELEMENT.querySelector(`.popup__text--address`), pin.offer.address);
-  fillTextField(CARD_ELEMENT.querySelector(`.popup__text--price`), pin.offer.price);
-  fillTextField(CARD_ELEMENT.querySelector(`.popup__type`), apartmentsType[pin.offer.type]);
-  fillTextCapacity(CARD_ELEMENT.querySelector(`.popup__text--capacity`), pin.offer.rooms, pin.offer.guests);
-  fillTextTime(CARD_ELEMENT.querySelector(`.popup__text--time`), pin.offer.checkin, pin.offer.checkout);
-  setFeatures(FEATURES_LIST, FEATURE_ITEMS, pin.offer.features);
-  fillTextField(CARD_ELEMENT.querySelector(`.popup__description`), pin.offer.description);
-  addPhotos(PHOTOS_LIST, PHOTO_ITEM, pin.offer.photos);
+  fillSrcField(cardElement.querySelector(`.popup__avatar`), pin.author.avatar);
+  fillTextField(cardElement.querySelector(`.popup__title`), pin.offer.title);
+  fillTextField(cardElement.querySelector(`.popup__text--address`), pin.offer.address);
+  fillTextField(cardElement.querySelector(`.popup__text--price`), pin.offer.price);
+  fillTextField(cardElement.querySelector(`.popup__type`), apartmentsType[pin.offer.type]);
+  fillTextCapacity(cardElement.querySelector(`.popup__text--capacity`), pin.offer.rooms, pin.offer.guests);
+  fillTextTime(cardElement.querySelector(`.popup__text--time`), pin.offer.checkin, pin.offer.checkout);
+  setFeatures(featuresList, featureItems, pin.offer.features);
+  fillTextField(cardElement.querySelector(`.popup__description`), pin.offer.description);
+  addPhotos(photosList, photoItem, pin.offer.photos);
 
-  FRAGMENT.appendChild(CARD_ELEMENT);
-  MAP.insertBefore(FRAGMENT, ELEMENT_AFTER);
+  fragment.appendChild(cardElement);
+  map.insertBefore(fragment, elementAfter);
 };
