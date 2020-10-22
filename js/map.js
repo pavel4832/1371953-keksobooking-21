@@ -34,7 +34,7 @@ window.map = {
       window.map.closeCard();
     });
 
-    CARD.querySelector(`.popup__close`).addEventListener(`keydown`, (evt) => {
+    card.querySelector(`.popup__close`).addEventListener(`keydown`, (evt) => {
       if (evt.key === `Enter`) {
         window.map.closeCard();
       }
