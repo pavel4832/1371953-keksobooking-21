@@ -7,6 +7,7 @@ const NOTICE_FORM = document.querySelector(`.ad-form`);
 const ALL_FIELDS = document.querySelectorAll(`.ad-form fieldset, .map__filters select, .map__filters fieldset`);
 const FORM_FIELDS = document.querySelectorAll(`.ad-form fieldset`);
 const FILTER_FIELDS = document.querySelectorAll(`.map__filters select, .map__filters fieldset`);
+const ADDRESS_FIELD = NOTICE_FORM.querySelector(`#address`);
 const RESET_BUTTON = document.querySelector(`.ad-form__reset`);
 const AVATAR_IMAGE = NOTICE_FORM.querySelector(`.ad-form-header__preview img`);
 const IMAGE_PLACE = NOTICE_FORM.querySelector(`.ad-form__photo`);
@@ -66,6 +67,7 @@ const onResetPress = () => {
 
 const activatePage = () => {
   enableFormFields(FORM_FIELDS);
+  ADDRESS_FIELD.setAttribute(`disabled`, `disabled`);
   MAP.classList.remove(`map--faded`);
   NOTICE_FORM.classList.remove(`ad-form--disabled`);
   window.fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.HEIGHT);
