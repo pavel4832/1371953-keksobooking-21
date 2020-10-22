@@ -60,12 +60,12 @@ const checkValidGuest = () => {
   GUEST_FIELD.reportValidity();
 };
 
-const checkValidTime = (timeSource, timeChange) => {
+const checkValidTime = function (timeSource, timeChange) {
   const time = timeChange.options;
 
-  time.forEach((element) => {
-    element.removeAttribute(`selected`);
-  });
+  for (let i = 0; i < time.length; i++) {
+    time[i].removeAttribute(`selected`);
+  }
 
   time[timeSource.selectedIndex].setAttribute(`selected`, `selected`);
 };
