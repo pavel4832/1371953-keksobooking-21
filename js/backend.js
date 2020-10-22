@@ -1,35 +1,35 @@
 'use strict';
 
+const TIMEOUT_IN_MS = 10000;
 const StatusCode = {
   OK: 200
 };
-const TIMEOUT_IN_MS = 10000;
 
 window.load = (url, method, onSuccess, onError, data) => {
-  const XHR = new XMLHttpRequest();
-  XHR.responseType = `json`;
+  const xhr = new XMLHttpRequest();
+  xhr.responseType = `json`;
 
-  XHR.addEventListener(`load`, () => {
-    if (XHR.status === StatusCode.OK) {
-      onSuccess(XHR.response);
+  xhr.addEventListener(`load`, () => {
+    if (xhr.status === StatusCode.OK) {
+      onSuccess(xhr.response);
     } else {
-      onError(`Статус ответа: ${XHR.status} ${XHR.statusText}`);
+      onError(`Статус ответа: ${xhr.status} ${xhr.statusText}`);
     }
   });
-  XHR.addEventListener(`error`, () => {
+  xhr.addEventListener(`error`, () => {
     onError(`Произошла ошибка соединения`);
   });
-  XHR.addEventListener(`timeout`, () => {
-    onError(`Запрос не успел выполниться за ${XHR.timeout}мс`);
+  xhr.addEventListener(`timeout`, () => {
+    onError(`Запрос не успел выполниться за ${xhr.timeout}мс`);
   });
 
-  XHR.timeout = TIMEOUT_IN_MS;
+  xhr.timeout = TIMEOUT_IN_MS;
 
-  XHR.open(method, url);
+  xhr.open(method, url);
 
   if (data) {
-    XHR.send(data);
+    xhr.send(data);
   } else {
-    XHR.send();
+    xhr.send();
   }
 };

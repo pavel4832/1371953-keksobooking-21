@@ -1,63 +1,63 @@
 'use strict';
 
 const UPLOAD_URL = `https://21.javascript.pages.academy/keksobooking`;
-const PAGE = document.querySelector(`main`);
-const MAP = document.querySelector(`.map`);
-const MAP_PIN_MAIN = MAP.querySelector(`.map__pin--main`);
-const SUCCESS_MESSAGE_TEMPLATE = document.querySelector(`#success`)
+const FILE_TYPES = [`gif`, `jpg`, `jpeg`, `png`];
+const page = document.querySelector(`main`);
+const map = document.querySelector(`.map`);
+const mapPinMain = map.querySelector(`.map__pin--main`);
+const successMessageTemplate = document.querySelector(`#success`)
   .content
   .querySelector(`.success`);
-const ERROR_MESSAGE_TEMPLATE = document.querySelector(`#error`)
+const errorMessageTemplate = document.querySelector(`#error`)
   .content
   .querySelector(`.error`);
-const FILE_TYPES = [`gif`, `jpg`, `jpeg`, `png`];
-const NOTICE_FORM = document.querySelector(`.ad-form`);
-const AVATAR_FIELD = NOTICE_FORM.querySelector(`#avatar`);
-const AVATAR_IMAGE = NOTICE_FORM.querySelector(`.ad-form-header__preview img`);
-const ADDRESS_FIELD = NOTICE_FORM.querySelector(`#address`);
-const TYPE_FIELD = NOTICE_FORM.querySelector(`#type`);
-const PRICE_FIELD = NOTICE_FORM.querySelector(`#price`);
-const TIME_IN_FIELD = NOTICE_FORM.querySelector(`#timein`);
-const TIME_OUT_FIELD = NOTICE_FORM.querySelector(`#timeout`);
-const ROOM_FIELD = NOTICE_FORM.querySelector(`#room_number`);
-const GUEST_FIELD = NOTICE_FORM.querySelector(`#capacity`);
-const IMAGES_FIELD = NOTICE_FORM.querySelector(`#images`);
-const IMAGE_PLACE = NOTICE_FORM.querySelector(`.ad-form__photo`);
-const minApartmentsPrice = {
-  palace: `10000`,
-  flat: `1000`,
-  house: `5000`,
-  bungalow: `0`
+const noticeForm = document.querySelector(`.ad-form`);
+const avatarField = noticeForm.querySelector(`#avatar`);
+const avatarImage = noticeForm.querySelector(`.ad-form-header__preview img`);
+const addressField = noticeForm.querySelector(`#address`);
+const typeField = noticeForm.querySelector(`#type`);
+const priceField = noticeForm.querySelector(`#price`);
+const timeInField = noticeForm.querySelector(`#timein`);
+const timeOutField = noticeForm.querySelector(`#timeout`);
+const roomsField = noticeForm.querySelector(`#room_number`);
+const guestsField = noticeForm.querySelector(`#capacity`);
+const imagesField = noticeForm.querySelector(`#images`);
+const imagePlace = noticeForm.querySelector(`.ad-form__photo`);
+const MinApartmentsPrice = {
+  PALACE: `10000`,
+  FLAT: `1000`,
+  HOUSE: `5000`,
+  BUNGALOW: `0`
 };
 
 window.fillAddressField = (offsetX, offsetY) => {
-  let xLocation = parseInt(MAP_PIN_MAIN.style.left, 10) + offsetX;
-  let yLocation = parseInt(MAP_PIN_MAIN.style.top, 10) + offsetY;
-  ADDRESS_FIELD.value = `${xLocation}, ${yLocation}`;
+  const xLocation = parseInt(mapPinMain.style.left, 10) + offsetX;
+  const yLocation = parseInt(mapPinMain.style.top, 10) + offsetY;
+  addressField.value = `${xLocation}, ${yLocation}`;
 };
 
 const checkValidType = () => {
-  let type = TYPE_FIELD.value;
-  let minPrice = minApartmentsPrice[type];
+  const type = typeField.value;
+  const minPrice = MinApartmentsPrice[type.toUpperCase()];
 
-  PRICE_FIELD.setAttribute(`placeholder`, minPrice);
-  PRICE_FIELD.setAttribute(`min`, minPrice);
+  priceField.setAttribute(`placeholder`, minPrice);
+  priceField.setAttribute(`min`, minPrice);
 };
 
 const checkValidGuest = () => {
-  let roomNumber = ROOM_FIELD.value;
-  let guestNumber = GUEST_FIELD.value;
+  const roomNumber = roomsField.value;
+  const guestNumber = guestsField.value;
 
   if (roomNumber === `100` && guestNumber !== `0`) {
-    GUEST_FIELD.setCustomValidity(`Это жилье не для гостей. Измените выбор`);
+    guestsField.setCustomValidity(`Это жилье не для гостей. Измените выбор`);
   } else if (guestNumber === `0` && roomNumber !== `100`) {
-    GUEST_FIELD.setCustomValidity(`Это жилье для размещения гостей. Измените выбор комнат`);
+    guestsField.setCustomValidity(`Это жилье для размещения гостей. Измените выбор комнат`);
   } else if (roomNumber < guestNumber) {
-    GUEST_FIELD.setCustomValidity(`Количество гостей превышает количество комнат. Уменьшите количество гостей`);
+    guestsField.setCustomValidity(`Количество гостей превышает количество комнат. Уменьшите количество гостей`);
   } else {
-    GUEST_FIELD.setCustomValidity(``);
+    guestsField.setCustomValidity(``);
   }
-  GUEST_FIELD.reportValidity();
+  guestsField.reportValidity();
 };
 
 const checkValidTime = (timeSource, timeChange) => {
@@ -76,8 +76,8 @@ const activateForm = () => {
 };
 
 const getTargetElement = () => {
-  const error = PAGE.querySelector(`.error`);
-  const success = PAGE.querySelector(`.success`);
+  const error = page.querySelector(`.error`);
+  const success = page.querySelector(`.success`);
   return error ? error : success;
 };
 
@@ -94,29 +94,29 @@ const onEnterPress = (evt) => {
 };
 
 const onPopupOutsideClick = (evt) => {
-  const ELEMENT = getTargetElement();
+  const element = getTargetElement();
 
   evt.preventDefault();
 
-  if (evt.target === ELEMENT) {
+  if (evt.target === element) {
     closePopup();
   }
 };
 
 const closePopup = () => {
-  const ELEMENT = getTargetElement();
+  const element = getTargetElement();
 
-  PAGE.removeChild(ELEMENT);
+  page.removeChild(element);
   document.removeEventListener(`keydown`, onPopupEscPress);
   document.removeEventListener(`click`, onPopupOutsideClick);
 };
 
 const onDataLoadSuccess = () => {
-  const FRAGMENT = document.createDocumentFragment();
-  const SUCCESS_MESSAGE = SUCCESS_MESSAGE_TEMPLATE.cloneNode(true);
+  const fragment = document.createDocumentFragment();
+  const successMessage = successMessageTemplate.cloneNode(true);
 
-  FRAGMENT.appendChild(SUCCESS_MESSAGE);
-  PAGE.appendChild(FRAGMENT);
+  fragment.appendChild(successMessage);
+  page.appendChild(fragment);
 
   document.addEventListener(`keydown`, onPopupEscPress);
   document.addEventListener(`click`, onPopupOutsideClick);
@@ -124,40 +124,40 @@ const onDataLoadSuccess = () => {
 };
 
 const onDataLoadError = () => {
-  const FRAGMENT = document.createDocumentFragment();
-  const ERROR_MESSAGE = ERROR_MESSAGE_TEMPLATE.cloneNode(true);
-  const TRY_AGAIN_BUTTON = ERROR_MESSAGE.querySelector(`.error__button`);
+  const fragment = document.createDocumentFragment();
+  const errorMessage = errorMessageTemplate.cloneNode(true);
+  const tryAgainButton = errorMessage.querySelector(`.error__button`);
 
-  FRAGMENT.appendChild(ERROR_MESSAGE);
-  PAGE.appendChild(FRAGMENT);
+  fragment.appendChild(errorMessage);
+  page.appendChild(fragment);
 
-  TRY_AGAIN_BUTTON.addEventListener(`click`, closePopup);
-  TRY_AGAIN_BUTTON.addEventListener(`keydown`, onEnterPress);
+  tryAgainButton.addEventListener(`click`, closePopup);
+  tryAgainButton.addEventListener(`keydown`, onEnterPress);
   document.addEventListener(`keydown`, onPopupEscPress);
   document.addEventListener(`click`, onPopupOutsideClick);
 };
 
 const setImage = (evt, target) => {
-  const FILE = evt.target.files[0];
-  const FILE_NAME = FILE.name.toLowerCase();
-  const MATCHES = FILE_TYPES.some((it) => {
-    return FILE_NAME.endsWith(it);
+  const file = evt.target.files[0];
+  const fileName = file.name.toLowerCase();
+  const matches = FILE_TYPES.some((it) => {
+    return fileName.endsWith(it);
   });
 
-  if (MATCHES) {
-    const READER = new FileReader();
+  if (matches) {
+    const reader = new FileReader();
     target.src = ``;
 
-    READER.addEventListener(`load`, (event) => {
+    reader.addEventListener(`load`, (event) => {
       target.src = event.target.result;
     });
 
-    READER.readAsDataURL(FILE);
+    reader.readAsDataURL(file);
   }
 };
 
 const getNewImage = (evt) => {
-  let file = document.createElement(`img`);
+  const file = document.createElement(`img`);
   file.setAttribute(`height`, `100%`);
   file.setAttribute(`width`, `100%`);
   file.setAttribute(`alt`, `Фотография жилья`);
@@ -168,37 +168,37 @@ const getNewImage = (evt) => {
 
 activateForm();
 
-AVATAR_FIELD.addEventListener(`change`, (evt) => {
-  setImage(evt, AVATAR_IMAGE);
+avatarField.addEventListener(`change`, (evt) => {
+  setImage(evt, avatarImage);
 });
 
-TYPE_FIELD.addEventListener(`change`, () => {
+typeField.addEventListener(`change`, () => {
   checkValidType();
 });
 
-TIME_IN_FIELD.addEventListener(`change`, () => {
-  checkValidTime(TIME_IN_FIELD, TIME_OUT_FIELD);
+timeInField.addEventListener(`change`, () => {
+  checkValidTime(timeInField, timeOutField);
 });
 
-TIME_OUT_FIELD.addEventListener(`change`, () => {
-  checkValidTime(TIME_OUT_FIELD, TIME_IN_FIELD);
+timeOutField.addEventListener(`change`, () => {
+  checkValidTime(timeOutField, timeInField);
 });
 
-GUEST_FIELD.addEventListener(`change`, () => {
+guestsField.addEventListener(`change`, () => {
   checkValidGuest();
 });
 
-ROOM_FIELD.addEventListener(`change`, () => {
+roomsField.addEventListener(`change`, () => {
   checkValidGuest();
 });
 
-IMAGES_FIELD.addEventListener(`change`, (evt) => {
-  IMAGE_PLACE.innerHTML = ``;
-  IMAGE_PLACE.appendChild(getNewImage(evt));
+imagesField.addEventListener(`change`, (evt) => {
+  imagePlace.innerHTML = ``;
+  imagePlace.appendChild(getNewImage(evt));
 });
 
-NOTICE_FORM.addEventListener(`submit`, (evt) => {
+noticeForm.addEventListener(`submit`, (evt) => {
   evt.preventDefault();
 
-  window.load(UPLOAD_URL, `POST`, onDataLoadSuccess, onDataLoadError, new FormData(NOTICE_FORM));
+  window.load(UPLOAD_URL, `POST`, onDataLoadSuccess, onDataLoadError, new FormData(noticeForm));
 });
