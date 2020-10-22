@@ -1,5 +1,7 @@
 'use strict';
 
+const LOW_PRICE = 10000;
+const HIGH_PRICE = 50000;
 const filter = document.querySelector(`.map__filters`);
 const typeField = filter.querySelector(`#housing-type`);
 const priceField = filter.querySelector(`#housing-price`);
@@ -20,9 +22,9 @@ const filterByPrice = (pin, value) => {
   if (value === `any`) {
     return true;
   } else {
-    if (pin < 10000) {
+    if (pin < LOW_PRICE) {
       price = `low`;
-    } else if (pin >= 10000 && pin <= 50000) {
+    } else if (pin >= LOW_PRICE && pin <= HIGH_PRICE) {
       price = `middle`;
     } else {
       price = `high`;

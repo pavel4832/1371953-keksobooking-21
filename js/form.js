@@ -44,7 +44,7 @@ const checkValidType = () => {
   priceField.setAttribute(`min`, minPrice);
 };
 
-const checkValidGuest = () => {
+window.checkValidGuest = () => {
   const roomNumber = roomsField.value;
   const guestNumber = guestsField.value;
 
@@ -68,11 +68,6 @@ const checkValidTime = (timeSource, timeChange) => {
   }
 
   time[timeSource.selectedIndex].setAttribute(`selected`, `selected`);
-};
-
-const activateForm = () => {
-  checkValidType();
-  checkValidGuest();
 };
 
 const getTargetElement = () => {
@@ -166,8 +161,6 @@ const getNewImage = (evt) => {
   return file;
 };
 
-activateForm();
-
 avatarField.addEventListener(`change`, (evt) => {
   setImage(evt, avatarImage);
 });
@@ -185,11 +178,11 @@ timeOutField.addEventListener(`change`, () => {
 });
 
 guestsField.addEventListener(`change`, () => {
-  checkValidGuest();
+  window.checkValidGuest();
 });
 
 roomsField.addEventListener(`change`, () => {
-  checkValidGuest();
+  window.checkValidGuest();
 });
 
 imagesField.addEventListener(`change`, (evt) => {

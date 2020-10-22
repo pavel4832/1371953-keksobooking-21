@@ -1,5 +1,7 @@
 'use strict';
 
+const MIN_NUMBER = 1;
+const MAX_ROOMS_NUMBER = 5;
 const map = document.querySelector(`.map`);
 const cardTemplate = document.querySelector(`#card`)
   .content
@@ -14,9 +16,9 @@ const apartmentsType = {
 const getRoomText = (rooms) => {
   let room;
 
-  if (rooms === 1) {
+  if (rooms === MIN_NUMBER) {
     room = `комната`;
-  } else if (rooms === 5) {
+  } else if (rooms === MAX_ROOMS_NUMBER) {
     room = `комнат`;
   } else {
     room = `комнаты`;
@@ -27,7 +29,7 @@ const getRoomText = (rooms) => {
 const getGuestText = (guests) => {
   let guest;
 
-  if (guests === 1) {
+  if (guests === MIN_NUMBER) {
     guest = `гостя`;
   } else {
     guest = `гостей`;
