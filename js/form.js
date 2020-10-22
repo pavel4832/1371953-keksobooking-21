@@ -60,7 +60,7 @@ const checkValidGuest = () => {
   GUEST_FIELD.reportValidity();
 };
 
-const checkValidTime = function (timeSource, timeChange) {
+const checkValidTime = (timeSource, timeChange) => {
   const time = timeChange.options;
 
   for (let i = 0; i < time.length; i++) {
