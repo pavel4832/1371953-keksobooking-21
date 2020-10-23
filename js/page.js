@@ -7,7 +7,6 @@ const noticeForm = document.querySelector(`.ad-form`);
 const allFields = document.querySelectorAll(`.ad-form fieldset, .map__filters select, .map__filters fieldset`);
 const formFields = document.querySelectorAll(`.ad-form fieldset`);
 const filterFields = document.querySelectorAll(`.map__filters select, .map__filters fieldset`);
-const addressField = noticeForm.querySelector(`#address`);
 const resetButton = document.querySelector(`.ad-form__reset`);
 const avatarImage = noticeForm.querySelector(`.ad-form-header__preview img`);
 const imagePlace = noticeForm.querySelector(`.ad-form__photo`);
@@ -67,7 +66,6 @@ const onResetPress = () => {
 
 const activatePage = () => {
   enableFormFields(formFields);
-  addressField.setAttribute(`disabled`, `disabled`);
   map.classList.remove(`map--faded`);
   noticeForm.classList.remove(`ad-form--disabled`);
   window.fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.HEIGHT);
