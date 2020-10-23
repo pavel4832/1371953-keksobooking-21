@@ -60,16 +60,6 @@ window.checkValidGuest = () => {
   guestsField.reportValidity();
 };
 
-const checkValidTime = (timeSource, timeChange) => {
-  const time = timeChange.options;
-
-  for (let i = 0; i < time.length; i++) {
-    time[i].removeAttribute(`selected`);
-  }
-
-  time[timeSource.selectedIndex].setAttribute(`selected`, `selected`);
-};
-
 const getTargetElement = () => {
   const error = page.querySelector(`.error`);
   const success = page.querySelector(`.success`);
@@ -170,11 +160,11 @@ typeField.addEventListener(`change`, () => {
 });
 
 timeInField.addEventListener(`change`, () => {
-  checkValidTime(timeInField, timeOutField);
+  timeOutField.value = timeInField.value;
 });
 
 timeOutField.addEventListener(`change`, () => {
-  checkValidTime(timeOutField, timeInField);
+  timeInField.value = timeOutField.value;
 });
 
 guestsField.addEventListener(`change`, () => {
