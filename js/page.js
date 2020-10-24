@@ -68,7 +68,7 @@ const activatePage = () => {
   enableFormFields(formFields);
   map.classList.remove(`map--faded`);
   noticeForm.classList.remove(`ad-form--disabled`);
-  window.fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.HEIGHT);
+  window.form.fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.HEIGHT);
   window.load(LOAD_URL, `GET`, onDataLoadSuccess, onDataLoadError);
   mapPinMain.removeEventListener(`mousedown`, onMouseLeftPress);
   mapPinMain.removeEventListener(`keydown`, onEnterPress);
@@ -80,7 +80,7 @@ window.deactivatePage = () => {
   avatarImage.src = `img/muffin-grey.svg`;
   imagePlace.innerHTML = ``;
   disableFormFields(allFields);
-  window.fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.OFFSET_X);
+  window.form.fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.OFFSET_X);
   map.classList.add(`map--faded`);
   noticeForm.classList.add(`ad-form--disabled`);
   mapPinMain.addEventListener(`mousedown`, onMouseLeftPress);

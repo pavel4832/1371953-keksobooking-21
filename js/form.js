@@ -2,6 +2,7 @@
 
 const UPLOAD_URL = `https://21.javascript.pages.academy/keksobooking`;
 const FILE_TYPES = [`gif`, `jpg`, `jpeg`, `png`];
+const RADIX = 10;
 const page = document.querySelector(`main`);
 const map = document.querySelector(`.map`);
 const mapPinMain = map.querySelector(`.map__pin--main`);
@@ -30,10 +31,27 @@ const MinApartmentsPrice = {
   BUNGALOW: `0`
 };
 
-window.fillAddressField = (offsetX, offsetY) => {
-  const xLocation = parseInt(mapPinMain.style.left, 10) + offsetX;
-  const yLocation = parseInt(mapPinMain.style.top, 10) + offsetY;
-  addressField.value = `${xLocation}, ${yLocation}`;
+window.form = {
+  fillAddressField: (offsetX, offsetY) => {
+    const xLocation = parseInt(mapPinMain.style.left, RADIX) + offsetX;
+    const yLocation = parseInt(mapPinMain.style.top, RADIX) + offsetY;
+    addressField.value = `${xLocation}, ${yLocation}`;
+  },
+  checkValidGuest: () => {
+    const roomNumber = roomsField.value;
+    const guestNumber = guestsField.value;
+
+    if (roomNumber === `100` && guestNumber !== `0`) {
+      guestsField.setCustomValidity(`Это жилье не для гостей. Измените выбор`);
+    } else if (guestNumber === `0` && roomNumber !== `100`) {
+      guestsField.setCustomValidity(`Это жилье для размещения гостей. Измените выбор комнат`);
+    } else if (roomNumber < guestNumber) {
+      guestsField.setCustomValidity(`Количество гостей превышает количество комнат. Уменьшите количество гостей`);
+    } else {
+      guestsField.setCustomValidity(``);
+    }
+    guestsField.reportValidity();
+  }
 };
 
 const checkValidType = () => {
@@ -42,22 +60,6 @@ const checkValidType = () => {
 
   priceField.setAttribute(`placeholder`, minPrice);
   priceField.setAttribute(`min`, minPrice);
-};
-
-window.checkValidGuest = () => {
-  const roomNumber = roomsField.value;
-  const guestNumber = guestsField.value;
-
-  if (roomNumber === `100` && guestNumber !== `0`) {
-    guestsField.setCustomValidity(`Это жилье не для гостей. Измените выбор`);
-  } else if (guestNumber === `0` && roomNumber !== `100`) {
-    guestsField.setCustomValidity(`Это жилье для размещения гостей. Измените выбор комнат`);
-  } else if (roomNumber < guestNumber) {
-    guestsField.setCustomValidity(`Количество гостей превышает количество комнат. Уменьшите количество гостей`);
-  } else {
-    guestsField.setCustomValidity(``);
-  }
-  guestsField.reportValidity();
 };
 
 const getTargetElement = () => {
@@ -168,11 +170,11 @@ timeOutField.addEventListener(`change`, () => {
 });
 
 guestsField.addEventListener(`change`, () => {
-  window.checkValidGuest();
+  window.form.checkValidGuest();
 });
 
 roomsField.addEventListener(`change`, () => {
-  window.checkValidGuest();
+  window.form.checkValidGuest();
 });
 
 imagesField.addEventListener(`change`, (evt) => {
