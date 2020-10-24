@@ -55,7 +55,7 @@ const dragMainPin = (evt) => {
     checkValidPosition(newCoords);
     mapPinMain.style.top = (newCoords.y) + `px`;
     mapPinMain.style.left = (newCoords.x) + `px`;
-    window.fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.HEIGHT);
+    window.form.fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.HEIGHT);
   };
 
   const onMouseMove = (moveEvt) => {

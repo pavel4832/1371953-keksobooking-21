@@ -1,4 +1,4 @@
 'use strict';
 
 window.deactivatePage();
-window.checkValidGuest();
+window.form.checkValidGuest();
