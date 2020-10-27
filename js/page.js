@@ -14,7 +14,9 @@ const imagePlace = noticeForm.querySelector(`.ad-form__photo`);
 const MainPinDimensions = {
   WIDTH: 62,
   HEIGHT: 84,
-  OFFSET_X: 31
+  OFFSET_X: 31,
+  TOP: 375,
+  LEFT: 570
 };
 window.pins = [];
 
@@ -85,6 +87,8 @@ window.deactivatePage = () => {
   window.fillAddressField(MainPinDimensions.OFFSET_X, MainPinDimensions.OFFSET_X);
   map.classList.add(`map--faded`);
   noticeForm.classList.add(`ad-form--disabled`);
+  mapPinMain.style.top = MainPinDimensions.TOP + `px`;
+  mapPinMain.style.left = MainPinDimensions.LEFT + `px`;
   mapPinMain.addEventListener(`mousedown`, onMouseLeftPress);
   mapPinMain.addEventListener(`keydown`, onEnterPress);
   window.pin.removePins();
