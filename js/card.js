@@ -6,7 +6,7 @@ const map = document.querySelector(`.map`);
 const cardTemplate = document.querySelector(`#card`)
   .content
   .querySelector(`.map__card`);
-const apartmentsType = {
+const ApartmentsType = {
   palace: `Дворец`,
   flat: `Квартира`,
   house: `Дом`,
@@ -14,27 +14,18 @@ const apartmentsType = {
 };
 
 const getRoomText = (rooms) => {
-  let room;
-
   if (rooms === MIN_NUMBER) {
-    room = `комната`;
+    return `комната`;
   } else if (rooms === MAX_ROOMS_NUMBER) {
-    room = `комнат`;
-  } else {
-    room = `комнаты`;
-  }
-  return room;
+    return `комнат`;
+  } return `комнаты`;
 };
 
 const getGuestText = (guests) => {
-  let guest;
-
   if (guests === MIN_NUMBER) {
-    guest = `гостя`;
-  } else {
-    guest = `гостей`;
+    return `гостя`;
   }
-  return guest;
+  return `гостей`;
 };
 
 const fillSrcField = (element, src) => {
@@ -113,7 +104,7 @@ window.renderCard = (pin) => {
   fillTextField(cardElement.querySelector(`.popup__title`), pin.offer.title);
   fillTextField(cardElement.querySelector(`.popup__text--address`), pin.offer.address);
   fillTextField(cardElement.querySelector(`.popup__text--price`), pin.offer.price);
-  fillTextField(cardElement.querySelector(`.popup__type`), apartmentsType[pin.offer.type]);
+  fillTextField(cardElement.querySelector(`.popup__type`), ApartmentsType[pin.offer.type]);
   fillTextCapacity(cardElement.querySelector(`.popup__text--capacity`), pin.offer.rooms, pin.offer.guests);
   fillTextTime(cardElement.querySelector(`.popup__text--time`), pin.offer.checkin, pin.offer.checkout);
   setFeatures(featuresList, featureItems, pin.offer.features);
